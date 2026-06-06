@@ -1,5 +1,5 @@
 const pulseUrl = process.env.PULSE_URL || "https://fangzheng17.github.io/pulse-26/";
-const topic = process.env.NTFY_TOPIC;
+const topic = process.env.NTFY_TOPIC?.trim();
 const kindArg = process.argv.find((arg) => arg.startsWith("--kind="))?.split("=")[1];
 
 if (!topic) {
