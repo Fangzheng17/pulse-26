@@ -21,7 +21,7 @@ import {
   Star,
   ThumbsDown
 } from "lucide-react";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import stadiumNight from "../assets/stadium-night.png";
 import { matchTimeline, pulseCards, pushSchedule, sourceLinks } from "./data.js";
 
@@ -126,17 +126,68 @@ function TimelineItem({ item }) {
 
 function App() {
   const [selectedId, setSelectedId] = useState("opening");
-  const [savedIds, setSavedIds] = useState(new Set(["opening"]));
-  const [mutedIds, setMutedIds] = useState(new Set());
+  const [savedIds, setSavedIds] = useState(() => new Set(JSON.parse(localStorage.getItem("pulse26:saved") ?? "[\"opening\"]")));
+  const [mutedIds, setMutedIds] = useState(() => new Set(JSON.parse(localStorage.getItem("pulse26:muted") ?? "[]")));
   const [nav, setNav] = useState("今日");
+  const [toast, setToast] = useState("");
+  const briefingRef = useRef(null);
+  const cardsRef = useRef(null);
+  const timelineRef = useRef(null);
+  const sourcesRef = useRef(null);
   const selected = pulseCards.find((card) => card.id === selectedId) ?? pulseCards[0];
   const countdown = useMemo(getCountdown, []);
   const beijingTime = useMemo(formatBeijingTime, []);
 
+  useEffect(() => {
+    localStorage.setItem("pulse26:saved", JSON.stringify([...savedIds]));
+  }, [savedIds]);
+
+  useEffect(() => {
+    localStorage.setItem("pulse26:muted", JSON.stringify([...mutedIds]));
+  }, [mutedIds]);
+
+  useEffect(() => {
+    if (!toast) return;
+    const timer = window.setTimeout(() => setToast(""), 2200);
+    return () => window.clearTimeout(timer);
+  }, [toast]);
+
+  function showToast(message) {
+    setToast(message);
+  }
+
+  function scrollTo(ref) {
+    ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function handleNav(label) {
+    setNav(label);
+    const refs = {
+      今日: cardsRef,
+      赛程: timelineRef,
+      情报: briefingRef,
+      来源: sourcesRef
+    };
+    scrollTo(refs[label] ?? cardsRef);
+  }
+
+  function selectCard(id, scrollDetail = true) {
+    setSelectedId(id);
+    if (scrollDetail) {
+      window.setTimeout(() => scrollTo(briefingRef), 60);
+    }
+  }
+
   function toggleSaved(id) {
     setSavedIds((current) => {
       const next = new Set(current);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (next.has(id)) {
+        next.delete(id);
+        showToast("已取消保存");
+      } else {
+        next.add(id);
+        showToast("已保存到这台手机");
+      }
       return next;
     });
   }
@@ -144,7 +195,13 @@ function App() {
   function toggleMuted(id) {
     setMutedIds((current) => {
       const next = new Set(current);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (next.has(id)) {
+        next.delete(id);
+        showToast("已恢复这张卡");
+      } else {
+        next.add(id);
+        showToast("已减少类似内容");
+      }
       return next;
     });
   }
@@ -163,7 +220,7 @@ function App() {
         </div>
         <nav>
           {navItems.map(({ label, icon }) => (
-            <IconButton key={label} icon={icon} label={label} active={nav === label} onClick={() => setNav(label)} />
+            <IconButton key={label} icon={icon} label={label} active={nav === label} onClick={() => handleNav(label)} />
           ))}
         </nav>
         <div className="rail-status">
@@ -205,13 +262,13 @@ function App() {
                 <h1>墨西哥 vs 南非</h1>
                 <p>开幕战，北京时间 6 月 12 日 03:00。我的建议是看上半场：主场情绪、前场压迫和反击第一脚会很快给出这届杯赛的第一条线索。</p>
                 <div className="primary-actions">
-                  <button>
+                  <button onClick={() => selectCard("opening")}>
                     <Eye size={17} />
                     打开简报
                   </button>
-                  <button className="secondary">
-                    <Bookmark size={17} />
-                    保存夜场
+                  <button className={savedIds.has("opening") ? "secondary saved-primary" : "secondary"} onClick={() => toggleSaved("opening")}>
+                    {savedIds.has("opening") ? <Check size={17} /> : <Bookmark size={17} />}
+                    {savedIds.has("opening") ? "已保存" : "保存夜场"}
                   </button>
                 </div>
               </div>
@@ -226,13 +283,13 @@ function App() {
               </div>
             </section>
 
-            <section className="cards-section">
+            <section className="cards-section" ref={cardsRef}>
               <div className="section-heading">
                 <div>
                   <span>Daily Briefing</span>
                   <h2>今日情报卡</h2>
                 </div>
-                <button>
+                <button onClick={() => scrollTo(cardsRef)}>
                   全部
                   <ChevronRight size={16} />
                 </button>
@@ -245,7 +302,7 @@ function App() {
                     active={selected.id === card.id}
                     saved={savedIds.has(card.id)}
                     feedback={mutedIds.has(card.id)}
-                    onSelect={() => setSelectedId(card.id)}
+                    onSelect={() => selectCard(card.id)}
                     onSave={() => toggleSaved(card.id)}
                     onDown={() => toggleMuted(card.id)}
                   />
@@ -255,7 +312,7 @@ function App() {
           </section>
 
           <aside className="detail-column">
-            <section className="briefing-panel">
+            <section className="briefing-panel" ref={briefingRef}>
               <div className="panel-title">
                 <Sparkles size={17} />
                 <span>{selected.kind}</span>
@@ -275,7 +332,7 @@ function App() {
               </div>
             </section>
 
-            <section className="timeline-panel">
+            <section className="timeline-panel" ref={timelineRef}>
               <div className="panel-title">
                 <Clock3 size={17} />
                 <span>赛程暗线</span>
@@ -303,7 +360,7 @@ function App() {
               ))}
             </section>
 
-            <section className="sources-panel">
+            <section className="sources-panel" ref={sourcesRef}>
               <div className="panel-title">
                 <Star size={17} />
                 <span>Source confidence</span>
@@ -315,6 +372,7 @@ function App() {
           </aside>
         </div>
       </section>
+      {toast && <div className="toast" role="status">{toast}</div>}
     </main>
   );
 }
