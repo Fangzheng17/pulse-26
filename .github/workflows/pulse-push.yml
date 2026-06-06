@@ -1,0 +1,33 @@
+name: PULSE 26 Mobile Push
+
+on:
+  schedule:
+    - cron: "20 0 * * *"
+    - cron: "30 13 * * *"
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: "Push kind"
+        required: true
+        default: "test"
+        type: choice
+        options:
+          - test
+          - morning
+          - night
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Send mobile push
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          PULSE_URL: "https://fangzheng17.github.io/pulse-26/"
+        run: node scripts/send-pulse-push.mjs --kind=${{ github.event.inputs.kind || '' }}
