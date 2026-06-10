@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import stadiumNight from "../assets/stadium-night.png";
-import { matchTimeline, pulseCards, pushSchedule, sourceLinks } from "./data.js";
+import { fallbackPulse } from "./data.js";
 
 const navItems = [
   { label: "今日", icon: Activity },
@@ -125,6 +125,8 @@ function TimelineItem({ item }) {
 }
 
 function App() {
+  const [dailyPulse, setDailyPulse] = useState(fallbackPulse);
+  const [dataStatus, setDataStatus] = useState("正在读取今日内容");
   const [selectedId, setSelectedId] = useState("opening");
   const [savedIds, setSavedIds] = useState(() => new Set(JSON.parse(localStorage.getItem("pulse26:saved") ?? "[\"opening\"]")));
   const [mutedIds, setMutedIds] = useState(() => new Set(JSON.parse(localStorage.getItem("pulse26:muted") ?? "[]")));
@@ -134,9 +136,45 @@ function App() {
   const cardsRef = useRef(null);
   const timelineRef = useRef(null);
   const sourcesRef = useRef(null);
+  const pulseCards = dailyPulse.pulseCards?.length ? dailyPulse.pulseCards : fallbackPulse.pulseCards;
+  const matchTimeline = dailyPulse.matchTimeline?.length ? dailyPulse.matchTimeline : fallbackPulse.matchTimeline;
+  const pushSchedule = dailyPulse.pushSchedule?.length ? dailyPulse.pushSchedule : fallbackPulse.pushSchedule;
+  const sourceLinks = dailyPulse.sourceLinks?.length ? dailyPulse.sourceLinks : fallbackPulse.sourceLinks;
+  const topPick = dailyPulse.topPick ?? fallbackPulse.topPick;
   const selected = pulseCards.find((card) => card.id === selectedId) ?? pulseCards[0];
   const countdown = useMemo(getCountdown, []);
   const beijingTime = useMemo(formatBeijingTime, []);
+
+  useEffect(() => {
+    let active = true;
+    fetch(`${import.meta.env.BASE_URL}daily-pulse.json?ts=${Date.now()}`, { cache: "no-store" })
+      .then((response) => {
+        if (!response.ok) throw new Error(`daily-pulse.json ${response.status}`);
+        return response.json();
+      })
+      .then((json) => {
+        if (!active || !Array.isArray(json.pulseCards) || json.pulseCards.length === 0) return;
+        setDailyPulse({
+          ...fallbackPulse,
+          ...json,
+          meta: { ...fallbackPulse.meta, ...json.meta },
+          topPick: { ...fallbackPulse.topPick, ...json.topPick }
+        });
+        setDataStatus(json.sourceMode === "openai" ? "AI 今日简报" : "新闻源自动更新");
+      })
+      .catch(() => {
+        if (active) setDataStatus("备用内容");
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!pulseCards.some((card) => card.id === selectedId)) {
+      setSelectedId(pulseCards[0]?.id ?? "opening");
+    }
+  }, [pulseCards, selectedId]);
 
   useEffect(() => {
     localStorage.setItem("pulse26:saved", JSON.stringify([...savedIds]));
@@ -238,7 +276,8 @@ function App() {
             </button>
             <div>
               <span>北京时间 {beijingTime}</span>
-              <strong>2026 世界杯开幕周 Pulse</strong>
+              <strong>{dailyPulse.meta?.title ?? fallbackPulse.meta.title}</strong>
+              <small className="data-status">{dataStatus}</small>
             </div>
           </div>
           <div className="topbar-actions">
@@ -257,29 +296,29 @@ function App() {
               <div className="match-copy">
                 <div className="live-mark">
                   <Flame size={16} />
-                  <span>Tonight's Pick</span>
+                  <span>{topPick.label ?? "Tonight's Pick"}</span>
                 </div>
-                <h1>墨西哥 vs 南非</h1>
-                <p>开幕战，北京时间 6 月 12 日 03:00。我的建议是看上半场：主场情绪、前场压迫和反击第一脚会很快给出这届杯赛的第一条线索。</p>
+                <h1>{topPick.match}</h1>
+                <p>{topPick.body}</p>
                 <div className="primary-actions">
-                  <button onClick={() => selectCard("opening")}>
+                  <button onClick={() => selectCard(pulseCards[0]?.id ?? "opening")}>
                     <Eye size={17} />
                     打开简报
                   </button>
-                  <button className={savedIds.has("opening") ? "secondary saved-primary" : "secondary"} onClick={() => toggleSaved("opening")}>
-                    {savedIds.has("opening") ? <Check size={17} /> : <Bookmark size={17} />}
-                    {savedIds.has("opening") ? "已保存" : "保存夜场"}
+                  <button className={savedIds.has(pulseCards[0]?.id) ? "secondary saved-primary" : "secondary"} onClick={() => toggleSaved(pulseCards[0]?.id ?? "opening")}>
+                    {savedIds.has(pulseCards[0]?.id) ? <Check size={17} /> : <Bookmark size={17} />}
+                    {savedIds.has(pulseCards[0]?.id) ? "已保存" : "保存夜场"}
                   </button>
                 </div>
               </div>
               <div className="match-radar" aria-label="比赛雷达">
                 <div className="radar-core">
-                  <span>03:00</span>
+                  <span>{topPick.time ?? "03:00"}</span>
                   <strong>BJT</strong>
                 </div>
-                <Metric label="熬夜指数" value="8.6" accent />
-                <Metric label="冷门热度" value="中" />
-                <Metric label="来源置信" value="94%" />
+                {(topPick.metrics ?? fallbackPulse.topPick.metrics).map((metric) => (
+                  <Metric key={metric.label} label={metric.label} value={metric.value} accent={metric.accent} />
+                ))}
               </div>
             </section>
 
@@ -288,6 +327,7 @@ function App() {
                 <div>
                   <span>Daily Briefing</span>
                   <h2>今日情报卡</h2>
+                  <small>{dailyPulse.meta?.subtitle}</small>
                 </div>
                 <button onClick={() => scrollTo(cardsRef)}>
                   全部
@@ -330,6 +370,12 @@ function App() {
                 <ShieldCheck size={16} />
                 来源置信 {selected.confidence}% · {selected.source}
               </div>
+              {selected.url && (
+                <a className="source-link-button" href={selected.url} target="_blank" rel="noreferrer">
+                  <ExternalLink size={15} />
+                  打开来源
+                </a>
+              )}
             </section>
 
             <section className="timeline-panel" ref={timelineRef}>
@@ -365,8 +411,8 @@ function App() {
                 <Star size={17} />
                 <span>Source confidence</span>
               </div>
-              {sourceLinks.map((source) => (
-                <SourceMeter key={source.name} source={source} />
+              {sourceLinks.map((source, index) => (
+                <SourceMeter key={`${source.name}-${source.url}-${index}`} source={source} />
               ))}
             </section>
           </aside>

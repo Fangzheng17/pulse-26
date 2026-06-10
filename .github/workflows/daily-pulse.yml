@@ -1,0 +1,56 @@
+name: Generate Daily PULSE 26
+
+on:
+  schedule:
+    - cron: "5 0 * * *"
+    - cron: "15 13 * * *"
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: "Briefing kind"
+        required: true
+        default: "morning"
+        type: choice
+        options:
+          - morning
+          - night
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Generate daily pulse
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: ${{ secrets.OPENAI_MODEL }}
+          PULSE_URL: "https://fangzheng17.github.io/pulse-26/"
+        run: node scripts/generate-daily-pulse.mjs --kind=${{ github.event.inputs.kind || '' }}
+      - name: Commit generated pulse
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/daily-pulse.json
+          if git diff --cached --quiet; then
+            echo "No pulse changes to commit"
+          else
+            git commit -m "Update daily PULSE 26"
+            git push
+          fi
+      - name: Give Pages a short head start
+        run: sleep 45
+      - name: Send mobile push
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          PULSE_URL: "https://fangzheng17.github.io/pulse-26/"
+        run: node scripts/send-pulse-push.mjs --kind=${{ github.event.inputs.kind || '' }}

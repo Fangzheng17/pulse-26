@@ -130,3 +130,35 @@ export const pushSchedule = [
   { time: "21:30", label: "夜场预告", detail: "次日比赛选择、暗线、首发风险" },
   { time: "T-90", label: "临场卡", detail: "重点比赛首发、阵型、变量" }
 ];
+
+export const fallbackPulse = {
+  version: 1,
+  generatedAt: "2026-06-07T00:00:00.000Z",
+  generatedFor: "fallback",
+  sourceMode: "static",
+  meta: {
+    title: "2026 世界杯开幕周 Pulse",
+    subtitle: "静态备用内容",
+    status: "等待每日自动更新",
+    summary: "这是网页的备用内容。配置每日新闻流程后，GitHub Actions 会写入新的 daily-pulse.json。"
+  },
+  topPick: {
+    label: "Tonight's Pick",
+    match: "墨西哥 vs 南非",
+    time: "03:00",
+    body: "开幕战，北京时间 6 月 12 日 03:00。我的建议是看上半场：主场情绪、前场压迫和反击第一脚会很快给出这届杯赛的第一条线索。",
+    metrics: [
+      { label: "熬夜指数", value: "8.6", accent: true },
+      { label: "冷门热度", value: "中" },
+      { label: "来源置信", value: "94%" }
+    ]
+  },
+  pulseCards,
+  matchTimeline,
+  pushSchedule,
+  sourceLinks,
+  notification: {
+    title: "PULSE 26",
+    message: "今日世界杯 Pulse 已更新。"
+  }
+};

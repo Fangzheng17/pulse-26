@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises";
+
 const pulseUrl = process.env.PULSE_URL || "https://fangzheng17.github.io/pulse-26/";
 const topic = process.env.NTFY_TOPIC?.trim();
 const kindArg = process.argv.find((arg) => arg.startsWith("--kind="))?.split("=")[1];
@@ -67,6 +69,15 @@ const templates = {
 };
 
 const payload = templates[inferKind()] ?? templates.morning;
+const dailyPayload = await readDailyPulse().catch(() => null);
+const notificationPayload = dailyPayload?.notification
+  ? {
+      title: dailyPayload.notification.title || payload.title,
+      priority: payload.priority,
+      tags: payload.tags,
+      message: dailyPayload.notification.message || payload.message
+    }
+  : payload;
 
 const response = await fetch("https://ntfy.sh", {
   method: "POST",
@@ -75,10 +86,10 @@ const response = await fetch("https://ntfy.sh", {
   },
   body: JSON.stringify({
     topic,
-    title: payload.title,
-    message: payload.message,
-    priority: payload.priority,
-    tags: payload.tags,
+    title: notificationPayload.title,
+    message: notificationPayload.message,
+    priority: notificationPayload.priority,
+    tags: notificationPayload.tags,
     click: pulseUrl
   })
 });
@@ -88,5 +99,11 @@ if (!response.ok) {
 }
 
 const result = await response.json().catch(() => ({}));
-console.log(`Sent ${payload.title} to ntfy topic ${topic}`);
+console.log(`Sent ${notificationPayload.title} to ntfy topic ${topic}`);
 if (result.id) console.log(`ntfy message id: ${result.id}`);
+
+async function readDailyPulse() {
+  if (kindArg === "test") return null;
+  const file = new URL("../public/daily-pulse.json", import.meta.url);
+  return JSON.parse(await readFile(file, "utf8"));
+}
