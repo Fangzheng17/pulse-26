@@ -1,19 +1,19 @@
 {
   "version": 1,
-  "generatedAt": "2026-06-10T16:53:09.081Z",
+  "generatedAt": "2026-06-10T16:57:49.162Z",
   "generatedFor": "morning",
   "sourceMode": "rss",
   "meta": {
     "title": "PULSE 26 世界杯晨报",
-    "subtitle": "北京时间 2026/06/11 00:53 · 新闻源自动更新",
+    "subtitle": "北京时间 2026/06/11 00:57 · 新闻源自动更新",
     "status": "RSS fallback",
     "summary": "今日内容来自公开新闻源自动汇总。配置 OPENAI_API_KEY 后会升级为中文编辑判断版。"
   },
   "topPick": {
     "label": "Today's Lead",
-    "match": "Canada's World Cup dreams face fir",
+    "match": "Mexico vs South Africa: World Cup ",
     "time": "08:20",
-    "body": "Canada's World Cup dreams face first test as injury-",
+    "body": "Mexico vs South Africa: World Cup group match – team",
     "metrics": [
       {
         "label": "更新模式",
@@ -32,56 +32,8 @@
   },
   "pulseCards": [
     {
-      "id": "feed-0-canada-s-world-cup-dreams-face-f",
+      "id": "feed-0-mexico-vs-south-africa-world-cup",
       "kind": "今日头条",
-      "title": "Canada's World Cup dreams face fir",
-      "summary": "Canada's World Cup dreams face first test as injury-",
-      "why": "Reuters 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "点开来源阅读原文；如果配置 OPENAI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
-      "confidence": 92,
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxOYjQ5blZvTDBuQlRkZFc3Ql9Xb1oycmdkNUFUa3pBMTJoVlZycmI0QVZEMFlTdjUxcEJyUzYwcy1PV3VwNVpFRHlHUDRUdnJrdTctZDVMSmNTZ0F4MUo5VTN1dWcyUDZ0QzNsak4ydU9Ic0dpNXRqbmVFaG5RWVc3REpjOWdub2JfVmFhZGRQdVFISUlnRklZU3JwenlCcS1nV05jamFWZVNjZm9ZTjRpTks4LUs5QXlOeERF?oc=5",
-      "tone": "amber"
-    },
-    {
-      "id": "feed-1-poch-u-s-can-win-wc-despite-no-t",
-      "kind": "新闻线索",
-      "title": "Poch: U.S. can win WC despite no t",
-      "summary": "United States men's national team coach Mauricio Poc",
-      "why": "ESPN Soccer 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "点开来源阅读原文；如果配置 OPENAI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
-      "confidence": 88,
-      "source": "ESPN Soccer",
-      "url": "https://www.espn.com/soccer/story/_/id/49018362/pochettino-us-win-world-cup-no-top-100-players",
-      "tone": "green"
-    },
-    {
-      "id": "feed-2-messi-scores-in-cameo-in-front-o",
-      "kind": "赛前动态",
-      "title": "Messi scores in cameo in front of ",
-      "summary": "Argentine legend Messi, who is working his way back ",
-      "why": "ESPN Soccer 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "点开来源阅读原文；如果配置 OPENAI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
-      "confidence": 88,
-      "source": "ESPN Soccer",
-      "url": "https://www.espn.com/soccer/report/_/gameId/401867950",
-      "tone": "steel"
-    },
-    {
-      "id": "feed-3-world-cup-daily-live-updates-wit",
-      "kind": "赛程雷达",
-      "title": "World Cup Daily: Live updates with",
-      "summary": "Get all the updates from our reporters across the U.",
-      "why": "ESPN Soccer 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "点开来源阅读原文；如果配置 OPENAI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
-      "confidence": 88,
-      "source": "ESPN Soccer",
-      "url": "https://www.espn.com/soccer/story/_/id/49012679/world-cup-daily-one-day-go-mexico-prepare-opener",
-      "tone": "blue"
-    },
-    {
-      "id": "feed-4-mexico-vs-south-africa-world-cup",
-      "kind": "伤病观察",
       "title": "Mexico vs South Africa: World Cup ",
       "summary": "Mexico vs South Africa: World Cup group match – team",
       "why": "Reuters 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
@@ -89,11 +41,11 @@
       "confidence": 92,
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPcGREaHlnQ2paY1ZWUmNPaFY1LUVkM0E3WFgtVnlnelpLZXhhaDFOV3A2OUhrdlh4RnEwMGk2aWFHUHFiSzB3cXltcnJvelRvemVqZS1VV2FYSU9laUg3NEV4cjN4eTh1cXRJajh5RWcyYXpTd3RpWG15VUdvNTRlMWNkeWJRQjlydVN6V0tOa25Cbmw5THZlYWpkVk9DNWZSOGI1anR5UGROSzVGaGVTTnlNbnd2SVpi0gG-AUFVX3lxTE9MYWp2eUIybDNsLUNlODVNcW52Vjhqd3JpbU1BZ3d5SHhZdE44NzdDcVhTYVJjNlVoVDVkWWhMNVFjX0JSdVhkaVNoSktPTldWd0FmOXNKZFdfUUxEcVNvMGdTNTF4MHEzQkMyMXJHZndLb1c5TEJCblYzb1Q4VWpDUjdnWng0ZHYya3puTWZtdDJNT0VyOTZWMmNEZ21BaWVZTXhQM0pCUGFDcmxiNUw5dG9UcmhCam1xOVhOZEE?oc=5",
-      "tone": "green"
+      "tone": "amber"
     },
     {
-      "id": "feed-5-usa-not-totally-reliant-on-pulis",
-      "kind": "今日暗线",
+      "id": "feed-1-usa-not-totally-reliant-on-pulis",
+      "kind": "新闻线索",
       "title": "USA not totally reliant on Pulisic",
       "summary": "Former United States defender Marcelo Balboa says hi",
       "why": "BBC Sport 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
@@ -101,6 +53,54 @@
       "confidence": 90,
       "source": "BBC Sport",
       "url": "https://www.bbc.com/sport/football/videos/cy5vlg1de26o?at_medium=RSS&at_campaign=rss",
+      "tone": "green"
+    },
+    {
+      "id": "feed-2-more-than-the-score",
+      "kind": "赛前动态",
+      "title": "More than the Score",
+      "summary": "The United States, Canada and Mexico will co-host th",
+      "why": "BBC Sport 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
+      "watch": "点开来源阅读原文；如果配置 OPENAI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
+      "confidence": 90,
+      "source": "BBC Sport",
+      "url": "https://www.bbc.co.uk/sounds/play/p0nr414b?at_medium=RSS&at_campaign=rss",
+      "tone": "steel"
+    },
+    {
+      "id": "feed-3-mexico-predicted-lineup-vs-south",
+      "kind": "赛程雷达",
+      "title": "Mexico Predicted Lineup vs. South ",
+      "summary": "Mexico Predicted Lineup vs. South Africa: World Cup ",
+      "why": "Google News 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
+      "watch": "点开来源阅读原文；如果配置 OPENAI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
+      "confidence": 82,
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxNbFpZMF83X3lJMWRxT18xZDhZRnlmVlZWSkpyeE5aNW5rVGdWa1czSDk5TlBhUHpNeEt0RThzbnVGd0pwaHpfSnVONHFsR1JOakFSdVZ2aElGUlFXcGhDaVpvR1Bra0IwWENLVWI3MFVSelFlcDZUbXY0amE5NHBCQ3lXOXZUN3ZteGVR?oc=5",
+      "tone": "blue"
+    },
+    {
+      "id": "feed-4-mexico-vs-south-africa-predictio",
+      "kind": "伤病观察",
+      "title": "Mexico vs South Africa Predictions",
+      "summary": "Mexico vs South Africa Predictions, Picks & Odds — T",
+      "why": "Google News 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
+      "watch": "点开来源阅读原文；如果配置 OPENAI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
+      "confidence": 82,
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxQZG5tclVLYmxsR1FHNWF5UDJ3XzhCeGF6SVdsRHpJOHRBeWdCWmpyQWNfVzd0QmlJcGxzUlR3X3lZSVQ5THhSTVpBdkhRUWRDZnlrSXRXUVFkNEN0cjd6Q0ZReFhEVGRQRVlKX2pTWGo2SEttSXRNYk5EaThGdEgwcU5rOHEtaWF5djZlU2ozXzZBRVF2elloSTVwczM?oc=5",
+      "tone": "green"
+    },
+    {
+      "id": "feed-5-tuchel-says-england-s-saka-still",
+      "kind": "今日暗线",
+      "title": "Tuchel says England's Saka still r",
+      "summary": "Tuchel says England's Saka still recovering from inj",
+      "why": "Reuters 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
+      "watch": "点开来源阅读原文；如果配置 OPENAI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
+      "confidence": 92,
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxOV1Y2SXRKOFJKQ0xiWUptYTBrWkpYWmd2d3hnZlYzY055S3RZY0xaNHQtUEREQjNDcWM0Z0NyYXVuYUZTbEpCRDFYcGlvMlNlT2xUdGJseFZtR0ctWHVtVkp1WHBHY0wtei10Y2o2aTNLSUQwMTdOMGtjV196aVZyS0MzLTAydjJfczl3cVJLWXNBNkdkSk5USUw1RGl5dDhfLUh0QjF5U3RjZmxaVmNUaTJ1YlJMZGRZcG5vVDg1UkZoQQ?oc=5",
       "tone": "amber"
     }
   ],
@@ -156,29 +156,29 @@
       "name": "Reuters",
       "type": "新闻源",
       "confidence": 92,
-      "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxOYjQ5blZvTDBuQlRkZFc3Ql9Xb1oycmdkNUFUa3pBMTJoVlZycmI0QVZEMFlTdjUxcEJyUzYwcy1PV3VwNVpFRHlHUDRUdnJrdTctZDVMSmNTZ0F4MUo5VTN1dWcyUDZ0QzNsak4ydU9Ic0dpNXRqbmVFaG5RWVc3REpjOWdub2JfVmFhZGRQdVFISUlnRklZU3JwenlCcS1nV05jamFWZVNjZm9ZTjRpTks4LUs5QXlOeERF?oc=5"
+      "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPcGREaHlnQ2paY1ZWUmNPaFY1LUVkM0E3WFgtVnlnelpLZXhhaDFOV3A2OUhrdlh4RnEwMGk2aWFHUHFiSzB3cXltcnJvelRvemVqZS1VV2FYSU9laUg3NEV4cjN4eTh1cXRJajh5RWcyYXpTd3RpWG15VUdvNTRlMWNkeWJRQjlydVN6V0tOa25Cbmw5THZlYWpkVk9DNWZSOGI1anR5UGROSzVGaGVTTnlNbnd2SVpi0gG-AUFVX3lxTE9MYWp2eUIybDNsLUNlODVNcW52Vjhqd3JpbU1BZ3d5SHhZdE44NzdDcVhTYVJjNlVoVDVkWWhMNVFjX0JSdVhkaVNoSktPTldWd0FmOXNKZFdfUUxEcVNvMGdTNTF4MHEzQkMyMXJHZndLb1c5TEJCblYzb1Q4VWpDUjdnWng0ZHYya3puTWZtdDJNT0VyOTZWMmNEZ21BaWVZTXhQM0pCUGFDcmxiNUw5dG9UcmhCam1xOVhOZEE?oc=5"
     },
     {
-      "name": "ESPN Soccer",
+      "name": "BBC Sport",
       "type": "新闻源",
-      "confidence": 88,
-      "url": "https://www.espn.com/soccer/story/_/id/49018362/pochettino-us-win-world-cup-no-top-100-players"
+      "confidence": 90,
+      "url": "https://www.bbc.com/sport/football/videos/cy5vlg1de26o?at_medium=RSS&at_campaign=rss"
     },
     {
-      "name": "ESPN Soccer",
+      "name": "BBC Sport",
       "type": "新闻源",
-      "confidence": 88,
-      "url": "https://www.espn.com/soccer/report/_/gameId/401867950"
+      "confidence": 90,
+      "url": "https://www.bbc.co.uk/sounds/play/p0nr414b?at_medium=RSS&at_campaign=rss"
     },
     {
-      "name": "ESPN Soccer",
+      "name": "Google News",
       "type": "新闻源",
-      "confidence": 88,
-      "url": "https://www.espn.com/soccer/story/_/id/49012679/world-cup-daily-one-day-go-mexico-prepare-opener"
+      "confidence": 82,
+      "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxNbFpZMF83X3lJMWRxT18xZDhZRnlmVlZWSkpyeE5aNW5rVGdWa1czSDk5TlBhUHpNeEt0RThzbnVGd0pwaHpfSnVONHFsR1JOakFSdVZ2aElGUlFXcGhDaVpvR1Bra0IwWENLVWI3MFVSelFlcDZUbXY0amE5NHBCQ3lXOXZUN3ZteGVR?oc=5"
     }
   ],
   "notification": {
     "title": "PULSE 26 世界杯晨报",
-    "message": "Canada's World Cup dreams face fir\n\n点开查看完整卡片：https://fangzheng17.github.io/pulse-26/"
+    "message": "Mexico vs South Africa: World Cup \n\n点开查看完整卡片：https://fangzheng17.github.io/pulse-26/"
   }
 }
