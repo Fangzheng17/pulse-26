@@ -17,6 +17,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   generate:
@@ -30,6 +32,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+      - name: Install
+        run: npm ci
       - name: Generate daily pulse
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -47,8 +52,14 @@ jobs:
             git commit -m "Update daily PULSE 26"
             git push
           fi
-      - name: Give Pages a short head start
-        run: sleep 45
+      - name: Build site
+        run: npm run build
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
       - name: Send mobile push
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
