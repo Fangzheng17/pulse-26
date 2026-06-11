@@ -1,7 +1,6 @@
 import {
   Activity,
   Bell,
-  Bookmark,
   CalendarClock,
   Check,
   ChevronRight,
@@ -18,10 +17,12 @@ import {
   Newspaper,
   Radio,
   Search,
+  Share2,
   ShieldCheck,
   Sparkles,
   Star,
-  ThumbsDown
+  ThumbsDown,
+  ThumbsUp
 } from "lucide-react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import stadiumNight from "../assets/stadium-night.png";
@@ -191,9 +192,9 @@ function PulseCard({ card, active, saved, feedback, onSelect, onSave, onDown }) 
         <span style={{ width: `${card.confidence}%` }} />
       </div>
       <div className="card-actions">
-        <button onClick={(event) => { event.stopPropagation(); onSave(); }} className={saved ? "saved" : ""} title="保存">
-          {saved ? <Check size={15} /> : <Bookmark size={15} />}
-          {saved ? "已存" : "保存"}
+        <button onClick={(event) => { event.stopPropagation(); onSave(); }} className={saved ? "saved" : ""} title="这新闻可以">
+          {saved ? <Check size={15} /> : <ThumbsUp size={15} />}
+          这新闻可以
         </button>
         <button onClick={(event) => { event.stopPropagation(); onDown(); }} className={feedback ? "muted-on" : ""} title="不适合我">
           <ThumbsDown size={15} />
@@ -325,10 +326,10 @@ function App() {
       const next = new Set(current);
       if (next.has(id)) {
         next.delete(id);
-        showToast("已取消保存");
+        showToast("已取消这条反馈");
       } else {
         next.add(id);
-        showToast("已保存到这台手机");
+        showToast("已记下：这类新闻可以多一点");
       }
       return next;
     });
@@ -342,10 +343,30 @@ function App() {
         showToast("已恢复这张卡");
       } else {
         next.add(id);
-        showToast("已减少类似内容");
+        showToast("已记下：这类新闻少一点");
       }
       return next;
     });
+  }
+
+  async function sharePage() {
+    const shareData = {
+      title: dailyPulse.meta?.title ?? "PULSE 26 世界杯简报",
+      text: "我在看这个 2026 世界杯每日简报，卡片式更新还挺方便。",
+      url: window.location.href
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        showToast("已打开分享面板");
+        return;
+      }
+      await navigator.clipboard.writeText(shareData.url);
+      showToast("链接已复制，可以发给朋友");
+    } catch {
+      showToast("分享未完成");
+    }
   }
 
   return (
@@ -388,8 +409,8 @@ function App() {
             <button title="搜索">
               <Search size={17} />
             </button>
-            <button title="推送">
-              <Bell size={17} />
+            <button title="分享页面" onClick={sharePage}>
+              <Share2 size={17} />
             </button>
           </div>
         </header>
@@ -409,9 +430,9 @@ function App() {
                     <Eye size={17} />
                     打开简报
                   </button>
-                  <button className={savedIds.has(pulseCards[0]?.id) ? "secondary saved-primary" : "secondary"} onClick={() => toggleSaved(pulseCards[0]?.id ?? "opening")}>
-                    {savedIds.has(pulseCards[0]?.id) ? <Check size={17} /> : <Bookmark size={17} />}
-                    {savedIds.has(pulseCards[0]?.id) ? "已保存" : "保存夜场"}
+                  <button className="secondary" onClick={sharePage}>
+                    <Share2 size={17} />
+                    分享页面
                   </button>
                 </div>
               </div>

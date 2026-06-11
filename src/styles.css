@@ -383,7 +383,6 @@ h1 {
   background: #e8f5ed;
 }
 
-.primary-actions .saved-primary,
 .card-actions .saved {
   color: #1a281d;
   background: var(--yellow);
@@ -1164,17 +1163,12 @@ h1 {
     font-size: 12px;
   }
 
-  .card-actions {
-    flex-direction: column;
-  }
-
   .primary-actions {
     gap: 8px;
     margin-top: 14px;
   }
 
   .primary-actions button,
-  .card-actions button,
   .source-link-button {
     width: 100%;
   }
