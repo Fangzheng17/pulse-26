@@ -7,10 +7,12 @@ import {
   ChevronRight,
   Clock3,
   Compass,
+  Dumbbell,
   ExternalLink,
   Eye,
   Flame,
   Gauge,
+  Home,
   Menu,
   Moon,
   Newspaper,
@@ -46,6 +48,13 @@ const providerLabelMap = {
   openrouter: "OpenRouter 今日简报",
   openai: "OpenAI 今日简报"
 };
+
+const mobileTabs = [
+  { label: "首页", target: "今日", icon: Home },
+  { label: "赛程", target: "赛程", icon: CalendarClock },
+  { label: "情报", target: "情报", icon: Compass },
+  { label: "来源", target: "来源", icon: ShieldCheck }
+];
 
 function formatBeijingTime() {
   return new Intl.DateTimeFormat("zh-CN", {
@@ -205,6 +214,16 @@ function TimelineItem({ item }) {
         <small>{item.date} · {item.note}</small>
       </div>
     </div>
+  );
+}
+
+function ScheduleCard({ item, onSelect }) {
+  return (
+    <button className={`schedule-card ${item.level}`} onClick={onSelect}>
+      <span>{item.date}</span>
+      <strong>{item.match}</strong>
+      <small>{item.note}</small>
+    </button>
   );
 }
 
@@ -407,6 +426,21 @@ function App() {
               </div>
             </section>
 
+            <section className="schedule-strip" aria-label="今日赛程概览">
+              <div className="schedule-intro">
+                <Dumbbell size={18} />
+                <div>
+                  <strong>赛程速览</strong>
+                  <span>{matchTimeline.length} 条关键节点</span>
+                </div>
+              </div>
+              <div className="schedule-scroll">
+                {matchTimeline.map((item) => (
+                  <ScheduleCard key={`strip-${item.phase}-${item.date}`} item={item} onSelect={() => scrollTo(timelineRef)} />
+                ))}
+              </div>
+            </section>
+
             <section className="cards-section" ref={cardsRef}>
               <div className="section-heading">
                 <div>
@@ -503,6 +537,14 @@ function App() {
           </aside>
         </div>
       </section>
+      <nav className="bottom-nav" aria-label="手机底部导航">
+        {mobileTabs.map(({ label, target, icon: Icon }) => (
+          <button key={label} className={nav === target ? "active" : ""} onClick={() => handleNav(target)}>
+            <Icon size={19} />
+            <span>{label}</span>
+          </button>
+        ))}
+      </nav>
       {toast && <div className="toast" role="status">{toast}</div>}
     </main>
   );
