@@ -157,8 +157,7 @@ nav {
 }
 
 .icon-button,
-.topbar-actions button,
-.menu-button {
+.topbar-actions button {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -172,8 +171,7 @@ nav {
 
 .icon-button:hover,
 .icon-button.active,
-.topbar-actions button:hover,
-.menu-button:hover {
+.topbar-actions button:hover {
   background: #e4f3ea;
   color: var(--green-900);
 }
@@ -227,8 +225,7 @@ nav {
   gap: 12px;
 }
 
-.topbar-actions button,
-.menu-button {
+.topbar-actions button {
   width: 40px;
   justify-content: center;
   padding: 0;
@@ -981,12 +978,6 @@ h1 {
 
   .topbar-actions {
     display: none;
-  }
-
-  .menu-button {
-    width: 38px;
-    min-height: 38px;
-    background: #ffffff;
   }
 
   .tonight-panel {

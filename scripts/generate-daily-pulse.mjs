@@ -10,14 +10,34 @@ const aiBaseUrl = (process.env.AI_BASE_URL?.trim() || defaultBaseUrl(aiProvider)
 
 const feeds = [
   {
+    source: "FIFA 官方中文",
+    confidence: 99,
+    url: googleNewsUrl("site:fifa.com/zh 2026 世界杯 比分 赛果 战报", "zh")
+  },
+  {
     source: "FIFA 官方",
     confidence: 98,
-    url: googleNewsUrl("site:fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026 FIFA World Cup 2026")
+    url: googleNewsUrl("site:fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026 FIFA World Cup 2026 score result")
+  },
+  {
+    source: "央视体育",
+    confidence: 94,
+    url: googleNewsUrl("央视体育 2026 世界杯 比分 赛果 战报", "zh")
+  },
+  {
+    source: "新华社体育",
+    confidence: 94,
+    url: googleNewsUrl("新华社 2026 世界杯 比分 赛果 战报", "zh")
+  },
+  {
+    source: "人民日报体育",
+    confidence: 91,
+    url: googleNewsUrl("人民日报体育 2026 世界杯 比分 赛果", "zh")
   },
   {
     source: "路透社",
     confidence: 92,
-    url: googleNewsUrl("Reuters FIFA World Cup 2026")
+    url: googleNewsUrl("Reuters FIFA World Cup 2026 score result")
   },
   {
     source: "BBC 体育",
@@ -32,7 +52,12 @@ const feeds = [
   {
     source: "谷歌新闻",
     confidence: 82,
-    url: googleNewsUrl("2026 World Cup Mexico South Africa opening match injuries lineups")
+    url: googleNewsUrl("2026 World Cup score result Mexico South Africa live updates")
+  },
+  {
+    source: "中文体育新闻",
+    confidence: 86,
+    url: googleNewsUrl("2026 世界杯 今日 比分 赛果 赛程", "zh")
   }
 ];
 
@@ -49,12 +74,13 @@ const pushSchedule = [
   { time: "T-90", label: "临场卡", detail: "重点比赛首发、阵型、变量" }
 ];
 
-function googleNewsUrl(query) {
+function googleNewsUrl(query, locale = "en") {
+  const localeConfig = locale === "zh"
+    ? { hl: "zh-CN", gl: "CN", ceid: "CN:zh-Hans" }
+    : { hl: "en-US", gl: "US", ceid: "US:en" };
   const params = new URLSearchParams({
     q: `${query} when:2d`,
-    hl: "en-US",
-    gl: "US",
-    ceid: "US:en"
+    ...localeConfig
   });
   return `https://news.google.com/rss/search?${params.toString()}`;
 }
@@ -164,10 +190,14 @@ function parseFeed(xml, feed) {
     const description = pickTag(item, "description") || pickTag(item, "summary") || pickTag(item, "content");
     const publishedRaw = pickTag(item, "pubDate") || pickTag(item, "published") || pickTag(item, "updated");
     const publishedAt = Number.isNaN(Date.parse(publishedRaw)) ? null : new Date(publishedRaw).toISOString();
+    const itemSource = cleanSourceName(pickTag(item, "source"));
+    const source = itemSource || cleanSourceName(feed.source);
+    const sameSource = !itemSource || source === cleanSourceName(feed.source) || /谷歌新闻|中文体育新闻/.test(feed.source);
     return {
       id: `${feed.source}-${index}-${title}`.slice(0, 120),
-      source: feed.source,
-      confidence: feed.confidence,
+      source,
+      searchSource: feed.source,
+      confidence: sameSource ? feed.confidence : Math.max(68, feed.confidence - 12),
       title: cleanTitle(title),
       summary: description.slice(0, 260),
       url: link,
@@ -183,12 +213,49 @@ function cleanTitle(title) {
     .trim();
 }
 
+function cleanSourceName(source = "") {
+  const name = decodeXml(source).trim();
+  const sourceMap = {
+    "BBC Sport": "BBC 体育",
+    ESPN: "ESPN 足球",
+    "ESPN.com": "ESPN 足球",
+    FIFA: "FIFA 官方",
+    "FIFA.com": "FIFA 官方",
+    Reuters: "路透社",
+    Xinhua: "新华社",
+    "Xinhua News Agency": "新华社",
+    "People's Daily": "人民日报",
+    "CCTV.com": "央视网",
+    CCTV: "央视"
+  };
+  return sourceMap[name] ?? name;
+}
+
+function hasScoreSignal(text) {
+  const lower = String(text ?? "").toLowerCase();
+  const scoreLike = /比分|赛果|战报|进球|绝杀|出线|淘汰|战胜|击败|大胜|小胜|平局|加时|点球|首胜|\b(today'?s\s+world cup scores|latest results|points table|standings|scoreline|full-time|recap|live updates?|goals?|goal-scorer|win over|wins over|won over|beat|beats|defeat|defeats|victory)\b/.test(lower);
+  if (!scoreLike) return false;
+  if (/ceremony|performer|shakira|song|ticket|opening ceremony/.test(lower) && !/match|points table|standings|latest results|today'?s world cup scores|live updates?/.test(lower)) {
+    return false;
+  }
+  return true;
+}
+
+function isLowQualityArticle(article) {
+  const text = `${article.title} ${article.summary} ${article.source}`.toLowerCase();
+  return /买球|博彩|盘口|入口|\.vip|wnbk|betting|odds|props|futures|prediction|best bets|捷报比分|zhibo8|直播吧/.test(text);
+}
+
 function scoreArticle(article) {
+  const title = article.title.toLowerCase();
   const text = `${article.title} ${article.summary}`.toLowerCase();
   let score = article.confidence;
-  if (/world cup|fifa|2026/.test(text)) score += 45;
-  if (/mexico|south africa|opening|kickoff|lineup|injur|fixture|schedule|group|team/.test(text)) score += 24;
-  if (/transfer|club world cup|premier league/.test(text)) score -= 36;
+  if (/世界杯|world cup|fifa|2026/.test(text)) score += 45;
+  if (hasScoreSignal(title)) score += 86;
+  if (!hasScoreSignal(title) && hasScoreSignal(text)) score += 12;
+  if (/today'?s world cup scores|points table|standings|latest results|live updates?|recap|win over|wins over|beat|defeat|goal-scorer/.test(title)) score += 28;
+  if (/墨西哥|南非|开幕|揭幕|首发|伤病|赛程|对阵|小组|球队|mexico|south africa|opening|kickoff|lineup|injur|fixture|schedule|group|team/.test(text)) score += 24;
+  if (/ceremony|performer|shakira|ticket|transfer|club world cup|premier league|betting|odds|prediction/.test(text)) score -= 46;
   if (article.publishedAt) {
     const ageHours = (Date.now() - Date.parse(article.publishedAt)) / 3600000;
     score += Math.max(0, 30 - ageHours);
@@ -201,6 +268,7 @@ async function collectArticles() {
   const articles = settled.flatMap((result) => result.status === "fulfilled" ? result.value : []);
   const seen = new Set();
   return articles
+    .filter((article) => !isLowQualityArticle(article))
     .sort((a, b) => scoreArticle(b) - scoreArticle(a))
     .filter((article) => {
       const key = article.title.toLowerCase();
@@ -208,11 +276,11 @@ async function collectArticles() {
       seen.add(key);
       return true;
     })
-    .slice(0, 18);
+    .slice(0, 28);
 }
 
 function fallbackCards(articles) {
-  const usable = articles.length ? articles : [
+  const usable = articles.length ? selectCardArticles(articles) : [
     {
       title: "世界杯开幕夜进入倒计时",
       summary: "当前新闻源暂时不可用，先保留开幕战、赛程和观赛策略作为今日简报。",
@@ -238,9 +306,45 @@ function fallbackCards(articles) {
   });
 }
 
+function selectCardArticles(articles) {
+  const selected = [];
+  const usedTitles = new Set();
+  const addFirst = (predicate) => {
+    const article = articles.find((candidate) => predicate(candidate) && !usedTitles.has(candidate.title.toLowerCase()));
+    if (!article) return;
+    selected.push(article);
+    usedTitles.add(article.title.toLowerCase());
+  };
+
+  addFirst((article) => hasScoreSignal(article.title));
+  addFirst((article) => /FIFA|新华社|央视|人民日报/.test(article.source));
+  addFirst((article) => /中文/.test(article.searchSource ?? "") || /中国|新华|央视|人民|新浪/.test(article.source));
+  addFirst((article) => /fixture|schedule|赛程|对阵|group|小组/i.test(`${article.title} ${article.summary}`));
+  addFirst((article) => /lineup|squad|roster|首发|阵容|名单|team news/i.test(`${article.title} ${article.summary}`));
+  addFirst((article) => /injur|hurt|fitness|伤病|缺席/i.test(`${article.title} ${article.summary}`));
+
+  for (const article of articles) {
+    if (selected.length >= 6) break;
+    const key = article.title.toLowerCase();
+    if (!usedTitles.has(key)) {
+      selected.push(article);
+      usedTitles.add(key);
+    }
+  }
+  return selected;
+}
+
 function localizeArticle(article, index) {
+  const titleText = article.title.toLowerCase();
   const text = `${article.title} ${cleanSummary(article.summary)}`.toLowerCase();
   const source = article.source || "公开新闻源";
+  if (hasScoreSignal(titleText)) {
+    return {
+      title: scoreCardTitle(article),
+      summary: scoreCardSummary(article, source),
+      watch: "先看进球时间、晋级影响和小组排名变化，再决定是否回看集锦。"
+    };
+  }
   const categories = [
     {
       pattern: /injur|hurt|replace|withdraw|fitness|recover|saka|aguerd|ezzalzouli/,
@@ -297,6 +401,31 @@ function localizeArticle(article, index) {
   };
 }
 
+function scoreCardTitle(article) {
+  const title = article.title.toLowerCase();
+  if (/mexico|south africa|el tri|bafana|墨西哥|南非/.test(title)) return "墨西哥 vs 南非赛果更新";
+  if (/today'?s world cup scores|scores.*schedule|比分|赛果/.test(title)) return "今日世界杯比分速览";
+  if (/points table|standings|积分榜/.test(title)) return "积分榜与最新赛果更新";
+  if (/live updates?|实时|直播/.test(title)) return "今日比赛实时更新";
+  if (/goal-scorer|goal|进球/.test(title)) return "进球与关键球员成为焦点";
+  if (/win over|wins over|beat|defeat|victory|战胜|击败/.test(title)) return "今日赛果新闻更新";
+  return "今日最重要的比分新闻";
+}
+
+function scoreCardSummary(article, source) {
+  const title = article.title.toLowerCase();
+  if (/mexico|south africa|el tri|bafana|墨西哥|南非/.test(title)) {
+    return `${source} 更新了墨西哥与南非揭幕战相关赛果，是今天首页最该先看的比分新闻。`;
+  }
+  if (/points table|standings|积分榜/.test(title)) {
+    return `${source} 更新了赛果和积分榜信息，适合快速判断小组形势变化。`;
+  }
+  if (/live updates?|实时|直播/.test(title)) {
+    return `${source} 正在更新比赛进程，适合用来跟踪比分、进球和临场变化。`;
+  }
+  return `${source} 更新了今日赛果或比分动态，适合放在首页头条。`;
+}
+
 function cleanSummary(value) {
   const summary = String(value ?? "").trim();
   if (!summary || summary.toLowerCase() === "null" || summary.toLowerCase() === "undefined") {
@@ -314,11 +443,12 @@ function buildPrompt(articles) {
     "你是我的 2026 世界杯私人赛事编辑。基于候选新闻源，生成今日 PULSE 26 JSON。",
     "必须只输出 JSON，不要 Markdown，不要解释。",
     "要求：中文；5-8 张卡片；不要编造未确认信息；每张卡要有判断、看点和来源；label、kind、title、summary、why、watch、source 都必须用中文。",
+    "首页 topPick 必须优先选择今天最重要的比分、赛果或战报类新闻；如果没有明确比分，再选择最重要的赛程或球队动态。",
     "JSON 结构：",
     JSON.stringify({
       meta: { title: "string", subtitle: "string", status: "string", summary: "string" },
       topPick: {
-        label: "今日重点",
+        label: "比分头条",
         match: "string",
         time: "HH:mm",
         body: "string",
@@ -340,7 +470,7 @@ function buildPrompt(articles) {
     }),
     `生成类型：${kind}`,
     `北京时间：${beijingStamp()}`,
-    `候选新闻源：${JSON.stringify(articles.slice(0, 16), null, 2)}`
+    `候选新闻源：${JSON.stringify(articles.slice(0, 20), null, 2)}`
   ].join("\n\n");
 }
 
@@ -408,7 +538,7 @@ function buildPulsePayload(cards, articles, sourceMode, aiPayload = {}) {
   const aiMode = sourceMode !== "rss";
   const title = aiPayload.meta?.title ?? (kind === "night" ? "PULSE 26 夜场预告" : "PULSE 26 世界杯晨报");
   const subtitle = aiPayload.meta?.subtitle ?? `北京时间 ${beijingStamp(now)} · ${aiMode ? `${sourceMode} 生成` : "新闻源自动更新"}`;
-  const sourceLinks = articles.slice(0, 4).map((article) => ({
+  const sourceLinks = articles.slice(0, 6).map((article) => ({
     name: article.source,
     type: aiMode ? "AI候选源" : "新闻源",
     confidence: article.confidence ?? 82,
@@ -427,10 +557,10 @@ function buildPulsePayload(cards, articles, sourceMode, aiPayload = {}) {
       summary: aiPayload.meta?.summary ?? "今日内容来自公开新闻源自动汇总。接入 DeepSeek 或 OpenRouter 后会升级为中文编辑判断版。"
     },
     topPick: aiPayload.topPick ?? {
-      label: kind === "night" ? "夜场重点" : "今日重点",
-      match: topStory?.title ?? "2026 世界杯今日动态",
+      label: "比分头条",
+      match: topStory?.title ?? "今日最重要的比分新闻",
       time: kind === "night" ? "21:30" : "08:20",
-      body: topStory?.summary || "今日世界杯候选新闻已经更新，点开卡片查看来源和重点。",
+      body: topStory?.summary || "今日世界杯比分、赛果和战报候选新闻已经更新，点开卡片查看来源和重点。",
       metrics: [
         { label: "更新模式", value: aiMode ? "智能生成" : "新闻源", accent: true },
         { label: "候选新闻", value: String(articles.length) },

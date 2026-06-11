@@ -12,7 +12,6 @@ import {
   Flame,
   Gauge,
   Home,
-  Menu,
   Moon,
   Newspaper,
   Radio,
@@ -85,8 +84,15 @@ function hasLatinText(value = "") {
   return /[A-Za-z]{3,}/.test(String(value));
 }
 
+function needsRssCardLocalization(card) {
+  const text = `${card.title ?? ""} ${card.summary ?? ""} ${card.why ?? ""} ${card.watch ?? ""}`;
+  const latinLength = (text.match(/[A-Za-z]{4,}/g) ?? []).join("").length;
+  const chineseLength = (text.match(/[\u4e00-\u9fff]/g) ?? []).length;
+  return latinLength > Math.max(24, chineseLength);
+}
+
 function localizeRssCard(card, index) {
-  if (!hasLatinText(card.title) && !hasLatinText(card.summary)) {
+  if (!needsRssCardLocalization(card)) {
     return { ...card, source: displaySourceName(card.source) };
   }
 
@@ -116,11 +122,15 @@ function localizePayload(json) {
     ? json.pulseCards.map((card, index) => isRss ? localizeRssCard(card, index) : { ...card, source: displaySourceName(card.source) })
     : [];
   const topCard = pulseCards[0];
+  const shouldLocalizeTopPick = isRss && topCard && needsRssCardLocalization({
+    title: json.topPick?.match,
+    summary: json.topPick?.body
+  });
   const topPick = {
     ...json.topPick,
     label: localizeTopPickLabel(json.topPick?.label, json.generatedFor),
-    match: isRss && topCard ? topCard.title : json.topPick?.match,
-    body: isRss && topCard ? topCard.summary : json.topPick?.body,
+    match: shouldLocalizeTopPick ? topCard.title : json.topPick?.match,
+    body: shouldLocalizeTopPick ? topCard.summary : json.topPick?.body,
     metrics: Array.isArray(json.topPick?.metrics)
       ? json.topPick.metrics.map((metric) => ({
           ...metric,
@@ -141,7 +151,7 @@ function localizePayload(json) {
 
 function localizeTopPickLabel(label, generatedFor) {
   if (!label || hasLatinText(label)) {
-    return generatedFor === "night" ? "夜场重点" : "今日重点";
+    return generatedFor === "night" ? "比分夜报" : "比分头条";
   }
   return label;
 }
@@ -396,9 +406,6 @@ function App() {
       <section className="workspace">
         <header className="topbar">
           <div className="topbar-left">
-            <button className="menu-button" aria-label="菜单">
-              <Menu size={18} />
-            </button>
             <div>
               <span>北京时间 {beijingTime}</span>
               <strong>{dailyPulse.meta?.title ?? fallbackPulse.meta.title}</strong>
@@ -421,7 +428,7 @@ function App() {
               <div className="match-copy">
                 <div className="live-mark">
                   <Flame size={16} />
-                  <span>{topPick.label ?? "今日重点"}</span>
+                  <span>{topPick.label ?? "比分头条"}</span>
                 </div>
                 <h1>{topPick.match}</h1>
                 <p>{topPick.body}</p>
