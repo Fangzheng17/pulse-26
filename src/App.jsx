@@ -80,6 +80,10 @@ function displaySourceName(source = "") {
   return sourceNameMap[source] ?? source;
 }
 
+function cssUrl(value) {
+  return `url("${String(value).replaceAll("\"", "%22")}")`;
+}
+
 function hasLatinText(value = "") {
   return /[A-Za-z]{3,}/.test(String(value));
 }
@@ -131,6 +135,7 @@ function localizePayload(json) {
     label: localizeTopPickLabel(json.topPick?.label, json.generatedFor),
     match: shouldLocalizeTopPick ? topCard.title : json.topPick?.match,
     body: shouldLocalizeTopPick ? topCard.summary : json.topPick?.body,
+    image: json.topPick?.image || topCard?.image,
     metrics: Array.isArray(json.topPick?.metrics)
       ? json.topPick.metrics.map((metric) => ({
           ...metric,
@@ -191,7 +196,10 @@ function SourceMeter({ source }) {
 
 function PulseCard({ card, active, saved, feedback, onSelect, onSave, onDown }) {
   return (
-    <article className={`pulse-card tone-${card.tone} ${active ? "selected" : ""}`} onClick={onSelect}>
+    <article className={`pulse-card tone-${card.tone} ${active ? "selected" : ""} ${card.image ? "has-image" : ""}`} onClick={onSelect}>
+      {card.image && (
+        <div className="card-media" style={{ backgroundImage: cssUrl(card.image) }} aria-label={card.imageAlt || card.title} />
+      )}
       <div className="card-topline">
         <span>{card.kind}</span>
         <Gauge size={15} />
@@ -256,6 +264,7 @@ function App() {
   const sourceLinks = dailyPulse.sourceLinks?.length ? dailyPulse.sourceLinks : fallbackPulse.sourceLinks;
   const topPick = dailyPulse.topPick ?? fallbackPulse.topPick;
   const selected = pulseCards.find((card) => card.id === selectedId) ?? pulseCards[0];
+  const heroImage = topPick.image || selected?.image || pulseCards.find((card) => card.image)?.image || stadiumNight;
   const countdown = useMemo(getCountdown, []);
   const beijingTime = useMemo(formatBeijingTime, []);
 
@@ -380,7 +389,7 @@ function App() {
   }
 
   return (
-    <main className="app-shell" style={{ "--stadium": `url(${stadiumNight})` }}>
+    <main className="app-shell" style={{ "--stadium": cssUrl(heroImage) }}>
       <aside className="side-rail">
         <div className="brand">
           <div className="brand-mark">
@@ -500,6 +509,9 @@ function App() {
 
           <aside className="detail-column">
             <section className="briefing-panel" ref={briefingRef}>
+              {selected.image && (
+                <div className="briefing-image" style={{ backgroundImage: cssUrl(selected.image) }} aria-label={selected.imageAlt || selected.title} />
+              )}
               <div className="panel-title">
                 <Sparkles size={17} />
                 <span>{selected.kind}</span>

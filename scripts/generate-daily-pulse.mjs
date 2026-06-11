@@ -7,56 +7,77 @@ const aiProvider = resolveProvider();
 const aiKey = resolveAiKey();
 const aiModel = process.env.AI_MODEL?.trim() || process.env.OPENAI_MODEL?.trim() || defaultModel(aiProvider);
 const aiBaseUrl = (process.env.AI_BASE_URL?.trim() || defaultBaseUrl(aiProvider)).replace(/\/$/, "");
+const fifaSearchApi = "https://cxm-api.fifa.com/fifacxmsearch/api/results";
+const fifaSearchKey = "2kD9zRYRT7xN6kSGs6EoHcvSyKOyK0B4YaKTf1Ygeaw8PM6bgfR6SQ==";
+const officialFifaImage = "https://digitalhub.fifa.com/transform/6744d743-cde9-49a8-83f8-a3c0b070cf9e/FIFA-Rewards-FWC26_Collection-Header";
+
+const fifaSearchQueries = [
+  "FIFA World Cup 2026",
+  "World Cup 2026 today",
+  "World Cup 2026 results",
+  "World Cup 2026 match report",
+  "World Cup 2026 team news"
+];
 
 const feeds = [
   {
+    source: "FIFA 官方",
+    confidence: 96,
+    url: googleNewsUrl("site:fifa.com/en FIFA World Cup 2026 official news score result")
+  },
+  {
+    source: "FIFA 官方文章",
+    confidence: 95,
+    url: googleNewsUrl("site:fifa.com/en/articles FIFA World Cup 2026")
+  },
+  {
+    source: "FIFA 官方赛事页",
+    confidence: 94,
+    url: googleNewsUrl("site:fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026 FIFA World Cup 2026")
+  },
+  {
     source: "FIFA 官方中文",
-    confidence: 99,
+    confidence: 90,
     url: googleNewsUrl("site:fifa.com/zh 2026 世界杯 比分 赛果 战报", "zh")
   },
   {
-    source: "FIFA 官方",
-    confidence: 98,
-    url: googleNewsUrl("site:fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026 FIFA World Cup 2026 score result")
-  },
-  {
     source: "央视体育",
-    confidence: 94,
+    confidence: 78,
     url: googleNewsUrl("央视体育 2026 世界杯 比分 赛果 战报", "zh")
   },
   {
     source: "新华社体育",
-    confidence: 94,
+    confidence: 78,
     url: googleNewsUrl("新华社 2026 世界杯 比分 赛果 战报", "zh")
   },
   {
     source: "人民日报体育",
-    confidence: 91,
+    confidence: 76,
     url: googleNewsUrl("人民日报体育 2026 世界杯 比分 赛果", "zh")
   },
   {
     source: "路透社",
-    confidence: 92,
+    confidence: 76,
     url: googleNewsUrl("Reuters FIFA World Cup 2026 score result")
   },
   {
     source: "BBC 体育",
-    confidence: 90,
+    confidence: 74,
     url: "https://feeds.bbci.co.uk/sport/football/rss.xml"
   },
   {
     source: "ESPN 足球",
-    confidence: 88,
+    confidence: 74,
     url: "https://www.espn.com/espn/rss/soccer/news"
   },
   {
     source: "谷歌新闻",
-    confidence: 82,
+    confidence: 72,
     url: googleNewsUrl("2026 World Cup score result Mexico South Africa live updates")
   },
   {
     source: "中文体育新闻",
-    confidence: 86,
+    confidence: 70,
     url: googleNewsUrl("2026 世界杯 今日 比分 赛果 赛程", "zh")
   }
 ];
@@ -163,6 +184,82 @@ async function fetchText(url) {
   }
 }
 
+async function fetchJson(url, headers = {}) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 18000);
+  try {
+    const response = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        "User-Agent": "Pulse26Bot/1.0 (+https://fangzheng17.github.io/pulse-26/)",
+        ...headers
+      }
+    });
+    if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+    return await response.json();
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function fetchFifaSearch(query, clientType) {
+  const params = new URLSearchParams({
+    locale: "en",
+    searchString: query,
+    clientType,
+    type: "search",
+    context: "default",
+    size: "10",
+    sort: "relevance",
+    dateFrom: "2026-06-01"
+  });
+  const payload = await fetchJson(`${fifaSearchApi}?${params.toString()}`, {
+    "Content-Type": "application/json",
+    "X-Functions-Key": fifaSearchKey
+  });
+  return payload.hits?.hits?.map((hit, index) => normalizeFifaHit(hit, query, clientType, index)).filter(Boolean) ?? [];
+}
+
+async function collectFifaOfficialArticles() {
+  const requests = fifaSearchQueries.flatMap((query) => [
+    fetchFifaSearch(query, "fifaplus"),
+    fetchFifaSearch(query, "fifacom")
+  ]);
+  const settled = await Promise.allSettled(requests);
+  return settled.flatMap((result) => result.status === "fulfilled" ? result.value : []);
+}
+
+function normalizeFifaHit(hit, query, clientType, index) {
+  const source = hit?._source ?? {};
+  const publicUrl = normalizeFifaUrl(source.url);
+  if (!source.title || !publicUrl) return null;
+  const image = isFifaImage(source.image?.src) ? source.image.src : officialFifaImage;
+  const summary = cleanSummary(source.description) || cleanSummary(source.image?.alt) || "FIFA 官方更新了 2026 世界杯相关消息。";
+  const isMainSite = /^https:\/\/www\.fifa\.com\/en\//i.test(publicUrl);
+  return {
+    id: `fifa-${clientType}-${index}-${source.id ?? source.title}`.slice(0, 120),
+    source: "FIFA 官方",
+    searchSource: `FIFA 官方 API · ${query}`,
+    confidence: isMainSite ? 100 : 96,
+    title: cleanTitle(source.title),
+    summary: summary.slice(0, 260),
+    url: publicUrl,
+    publishedAt: Number.isNaN(Date.parse(source.contentDate)) ? null : new Date(source.contentDate).toISOString(),
+    image,
+    imageAlt: cleanSummary(source.image?.alt) || cleanSummary(source.image?.title) || source.title,
+    officialImage: true,
+    officialFifa: true
+  };
+}
+
+function normalizeFifaUrl(url = "") {
+  const value = String(url).trim();
+  if (/^https:\/\/www\.fifa\.com\/en\//i.test(value)) return value;
+  if (/^https:\/\/www\.inside\.fifa\.com\//i.test(value)) return value;
+  if (/^https:\/\/inside\.fifa\.com\//i.test(value)) return value.replace("https://inside.fifa.com/", "https://www.inside.fifa.com/");
+  return "";
+}
+
 function decodeXml(value = "") {
   return value
     .replaceAll("<![CDATA[", "")
@@ -193,6 +290,8 @@ function parseFeed(xml, feed) {
     const itemSource = cleanSourceName(pickTag(item, "source"));
     const source = itemSource || cleanSourceName(feed.source);
     const sameSource = !itemSource || source === cleanSourceName(feed.source) || /谷歌新闻|中文体育新闻/.test(feed.source);
+    const feedImage = extractFeedImage(item);
+    const image = isFifaImage(feedImage) ? feedImage : (/FIFA/.test(source) ? officialFifaImage : "");
     return {
       id: `${feed.source}-${index}-${title}`.slice(0, 120),
       source,
@@ -201,9 +300,21 @@ function parseFeed(xml, feed) {
       title: cleanTitle(title),
       summary: description.slice(0, 260),
       url: link,
-      publishedAt
+      publishedAt,
+      image,
+      imageAlt: cleanTitle(title),
+      officialImage: isFifaImage(image)
     };
   }).filter((item) => item.title);
+}
+
+function extractFeedImage(item) {
+  return decodeXml(
+    item.match(/<media:content[^>]+url=["']([^"']+)/i)?.[1]
+      || item.match(/<media:thumbnail[^>]+url=["']([^"']+)/i)?.[1]
+      || item.match(/<enclosure[^>]+url=["']([^"']+)/i)?.[1]
+      || ""
+  );
 }
 
 function cleanTitle(title) {
@@ -231,6 +342,10 @@ function cleanSourceName(source = "") {
   return sourceMap[name] ?? name;
 }
 
+function isFifaImage(url = "") {
+  return /^https:\/\/digitalhub\.fifa\.com\//i.test(String(url));
+}
+
 function hasScoreSignal(text) {
   const lower = String(text ?? "").toLowerCase();
   const scoreLike = /比分|赛果|战报|进球|绝杀|出线|淘汰|战胜|击败|大胜|小胜|平局|加时|点球|首胜|\b(today'?s\s+world cup scores|latest results|points table|standings|scoreline|full-time|recap|live updates?|goals?|goal-scorer|win over|wins over|won over|beat|beats|defeat|defeats|victory)\b/.test(lower);
@@ -243,6 +358,7 @@ function hasScoreSignal(text) {
 
 function isLowQualityArticle(article) {
   const text = `${article.title} ${article.summary} ${article.source}`.toLowerCase();
+  if (article.officialFifa) return false;
   return /买球|博彩|盘口|入口|\.vip|wnbk|betting|odds|props|futures|prediction|best bets|捷报比分|zhibo8|直播吧/.test(text);
 }
 
@@ -250,6 +366,9 @@ function scoreArticle(article) {
   const title = article.title.toLowerCase();
   const text = `${article.title} ${article.summary}`.toLowerCase();
   let score = article.confidence;
+  if (article.officialFifa) score += 66;
+  if (/^https:\/\/www\.fifa\.com\/en\//i.test(article.url ?? "")) score += 20;
+  if (isFifaImage(article.image)) score += 8;
   if (/世界杯|world cup|fifa|2026/.test(text)) score += 45;
   if (hasScoreSignal(title)) score += 86;
   if (!hasScoreSignal(title) && hasScoreSignal(text)) score += 12;
@@ -264,14 +383,18 @@ function scoreArticle(article) {
 }
 
 async function collectArticles() {
-  const settled = await Promise.allSettled(feeds.map(async (feed) => parseFeed(await fetchText(feed.url), feed)));
-  const articles = settled.flatMap((result) => result.status === "fulfilled" ? result.value : []);
+  const [officialResult, feedResults] = await Promise.all([
+    collectFifaOfficialArticles().catch(() => []),
+    Promise.allSettled(feeds.map(async (feed) => parseFeed(await fetchText(feed.url), feed)))
+  ]);
+  const feedArticles = feedResults.flatMap((result) => result.status === "fulfilled" ? result.value : []);
+  const articles = [...officialResult, ...feedArticles];
   const seen = new Set();
   return articles
     .filter((article) => !isLowQualityArticle(article))
     .sort((a, b) => scoreArticle(b) - scoreArticle(a))
     .filter((article) => {
-      const key = article.title.toLowerCase();
+      const key = `${article.url || article.title}`.toLowerCase();
       if (seen.has(key)) return false;
       seen.add(key);
       return true;
@@ -286,11 +409,16 @@ function fallbackCards(articles) {
       summary: "当前新闻源暂时不可用，先保留开幕战、赛程和观赛策略作为今日简报。",
       source: "PULSE 26",
       confidence: 72,
-      url: pulseUrl
+      url: pulseUrl,
+      image: officialFifaImage
     }
   ];
+  const officialImagePool = usable
+    .map((article) => article.image)
+    .filter((image) => isFifaImage(image) && image !== officialFifaImage);
   return usable.slice(0, 6).map((article, index) => {
     const localized = localizeArticle(article, index);
+    const image = pickOfficialImage(article, officialImagePool, index);
     return {
       id: `feed-${index}-${slug(article.title)}`,
       kind: index === 0 ? "今日头条" : ["新闻线索", "赛前动态", "赛程雷达", "伤病观察", "今日暗线"][index - 1] ?? "新闻线索",
@@ -301,22 +429,43 @@ function fallbackCards(articles) {
       confidence: article.confidence ?? 80,
       source: article.source,
       url: article.url,
+      image,
+      imageAlt: article.imageAlt || article.title,
       tone: ["amber", "green", "steel", "blue", "green", "amber"][index % 6]
     };
   });
+}
+
+function pickOfficialImage(article, imagePool, index) {
+  if (isFifaImage(article.image) && article.image !== officialFifaImage) return article.image;
+  if (imagePool.length) return imagePool[index % imagePool.length];
+  return officialFifaImage;
 }
 
 function selectCardArticles(articles) {
   const selected = [];
   const usedTitles = new Set();
   const addFirst = (predicate) => {
-    const article = articles.find((candidate) => predicate(candidate) && !usedTitles.has(candidate.title.toLowerCase()));
+    const article = articles.find((candidate) => predicate(candidate) && !usedTitles.has((candidate.url || candidate.title).toLowerCase()));
     if (!article) return;
     selected.push(article);
-    usedTitles.add(article.title.toLowerCase());
+    usedTitles.add((article.url || article.title).toLowerCase());
+  };
+  const addMany = (predicate, limit) => {
+    for (const article of articles) {
+      if (selected.filter(predicate).length >= limit || selected.length >= 6) break;
+      const key = (article.url || article.title).toLowerCase();
+      if (predicate(article) && !usedTitles.has(key)) {
+        selected.push(article);
+        usedTitles.add(key);
+      }
+    }
   };
 
+  addFirst((article) => article.officialFifa && hasScoreSignal(article.title));
   addFirst((article) => hasScoreSignal(article.title));
+  addMany((article) => article.officialFifa && /^https:\/\/www\.fifa\.com\/en\//i.test(article.url ?? ""), 2);
+  addMany((article) => article.officialFifa, 4);
   addFirst((article) => /FIFA|新华社|央视|人民日报/.test(article.source));
   addFirst((article) => /中文/.test(article.searchSource ?? "") || /中国|新华|央视|人民|新浪/.test(article.source));
   addFirst((article) => /fixture|schedule|赛程|对阵|group|小组/i.test(`${article.title} ${article.summary}`));
@@ -325,7 +474,7 @@ function selectCardArticles(articles) {
 
   for (const article of articles) {
     if (selected.length >= 6) break;
-    const key = article.title.toLowerCase();
+    const key = (article.url || article.title).toLowerCase();
     if (!usedTitles.has(key)) {
       selected.push(article);
       usedTitles.add(key);
@@ -444,6 +593,7 @@ function buildPrompt(articles) {
     "必须只输出 JSON，不要 Markdown，不要解释。",
     "要求：中文；5-8 张卡片；不要编造未确认信息；每张卡要有判断、看点和来源；label、kind、title、summary、why、watch、source 都必须用中文。",
     "首页 topPick 必须优先选择今天最重要的比分、赛果或战报类新闻；如果没有明确比分，再选择最重要的赛程或球队动态。",
+    "图片必须优先使用候选源里的 digitalhub.fifa.com 官方图片；不要自己编造图片 URL。",
     "JSON 结构：",
     JSON.stringify({
       meta: { title: "string", subtitle: "string", status: "string", summary: "string" },
@@ -452,6 +602,7 @@ function buildPrompt(articles) {
         match: "string",
         time: "HH:mm",
         body: "string",
+        image: "https://digitalhub.fifa.com/...",
         metrics: [{ label: "string", value: "string", accent: true }]
       },
       pulseCards: [{
@@ -464,6 +615,8 @@ function buildPrompt(articles) {
         confidence: 90,
         source: "string",
         url: "string",
+        image: "https://digitalhub.fifa.com/...",
+        imageAlt: "string",
         tone: "amber|green|steel|blue"
       }],
       notification: { title: "string", message: "string" }
@@ -538,11 +691,12 @@ function buildPulsePayload(cards, articles, sourceMode, aiPayload = {}) {
   const aiMode = sourceMode !== "rss";
   const title = aiPayload.meta?.title ?? (kind === "night" ? "PULSE 26 夜场预告" : "PULSE 26 世界杯晨报");
   const subtitle = aiPayload.meta?.subtitle ?? `北京时间 ${beijingStamp(now)} · ${aiMode ? `${sourceMode} 生成` : "新闻源自动更新"}`;
-  const sourceLinks = articles.slice(0, 6).map((article) => ({
+  const sourceLinks = cards.slice(0, 6).map((article) => ({
     name: article.source,
     type: aiMode ? "AI候选源" : "新闻源",
     confidence: article.confidence ?? 82,
-    url: article.url
+    url: article.url,
+    image: article.image || officialFifaImage
   }));
 
   return {
@@ -561,6 +715,7 @@ function buildPulsePayload(cards, articles, sourceMode, aiPayload = {}) {
       match: topStory?.title ?? "今日最重要的比分新闻",
       time: kind === "night" ? "21:30" : "08:20",
       body: topStory?.summary || "今日世界杯比分、赛果和战报候选新闻已经更新，点开卡片查看来源和重点。",
+      image: topStory?.image || officialFifaImage,
       metrics: [
         { label: "更新模式", value: aiMode ? "智能生成" : "新闻源", accent: true },
         { label: "候选新闻", value: String(articles.length) },
@@ -591,8 +746,15 @@ function normalizeAiPayload(aiPayload, articles) {
   const cards = Array.isArray(aiPayload.pulseCards) && aiPayload.pulseCards.length
     ? aiPayload.pulseCards
     : fallbackCards(articles);
+  const firstImage = articles.find((article) => isFifaImage(article.image))?.image || officialFifaImage;
   return {
     ...aiPayload,
+    topPick: aiPayload.topPick
+      ? {
+          ...aiPayload.topPick,
+          image: isFifaImage(aiPayload.topPick.image) ? aiPayload.topPick.image : firstImage
+        }
+      : aiPayload.topPick,
     pulseCards: cards.slice(0, 8).map((card, index) => ({
       id: card.id || `ai-${index}-${slug(card.title ?? "card")}`,
       kind: card.kind || "今日线索",
@@ -603,6 +765,8 @@ function normalizeAiPayload(aiPayload, articles) {
       confidence: clamp(Number(card.confidence) || 86, 50, 99),
       source: card.source || "公开新闻源",
       url: card.url || articles[index]?.url || pulseUrl,
+      image: isFifaImage(card.image) ? card.image : articles[index]?.image || officialFifaImage,
+      imageAlt: card.imageAlt || articles[index]?.imageAlt || card.title || "FIFA World Cup 2026",
       tone: ["amber", "green", "steel", "blue"].includes(card.tone) ? card.tone : ["amber", "green", "steel", "blue"][index % 4]
     }))
   };

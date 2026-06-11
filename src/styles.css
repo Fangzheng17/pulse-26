@@ -572,6 +572,26 @@ h1 {
   transition: transform 170ms ease, border-color 170ms ease, box-shadow 170ms ease;
 }
 
+.pulse-card.has-image {
+  padding-top: 0;
+}
+
+.card-media {
+  height: 94px;
+  margin: 0 -16px 2px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px 8px 0 0;
+  position: relative;
+}
+
+.card-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(8, 59, 36, 0.02), rgba(8, 59, 36, 0.2));
+}
+
 .pulse-card:hover,
 .pulse-card.selected {
   transform: translateY(-2px);
@@ -664,6 +684,15 @@ h1 {
 .sources-panel {
   padding: 18px;
   scroll-margin-top: 18px;
+}
+
+.briefing-image {
+  height: 148px;
+  margin: -4px 0 16px;
+  border-radius: 8px;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid rgba(8, 122, 67, 0.12);
 }
 
 .panel-title {

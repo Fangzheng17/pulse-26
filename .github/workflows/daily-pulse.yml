@@ -2,8 +2,7 @@ name: Generate Daily PULSE 26
 
 on:
   schedule:
-    - cron: "5 0 * * *"
-    - cron: "15 13 * * *"
+    - cron: "*/30 * * * *"
   workflow_dispatch:
     inputs:
       kind:
@@ -23,6 +22,9 @@ permissions:
 jobs:
   generate:
     runs-on: ubuntu-latest
+    concurrency:
+      group: daily-pulse-refresh
+      cancel-in-progress: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -48,6 +50,7 @@ jobs:
           PULSE_URL: "https://fangzheng17.github.io/pulse-26/"
         run: node scripts/generate-daily-pulse.mjs --kind=${{ github.event.inputs.kind || '' }}
       - name: Commit generated pulse
+        if: github.event_name == 'workflow_dispatch'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -66,7 +69,22 @@ jobs:
           path: ./dist
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
+      - name: Decide mobile push
+        id: push_window
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "send=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          hour="$(TZ=Asia/Shanghai date +%H)"
+          minute="$(TZ=Asia/Shanghai date +%M)"
+          if { [ "$hour" = "08" ] || [ "$hour" = "21" ]; } && [ "$minute" -ge 20 ] && [ "$minute" -le 50 ]; then
+            echo "send=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "send=false" >> "$GITHUB_OUTPUT"
+          fi
       - name: Send mobile push
+        if: steps.push_window.outputs.send == 'true'
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           PULSE_URL: "https://fangzheng17.github.io/pulse-26/"

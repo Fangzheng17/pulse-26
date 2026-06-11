@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "generatedAt": "2026-06-11T22:08:22.681Z",
+  "generatedAt": "2026-06-11T23:04:37.456Z",
   "generatedFor": "morning",
   "sourceMode": "rss",
   "meta": {
     "title": "PULSE 26 世界杯晨报",
-    "subtitle": "北京时间 2026/06/12 06:08 · 新闻源自动更新",
+    "subtitle": "北京时间 2026/06/12 07:04 · 新闻源自动更新",
     "status": "新闻源兜底",
     "summary": "今日内容来自公开新闻源自动汇总。接入 DeepSeek 或 OpenRouter 后会升级为中文编辑判断版。"
   },
@@ -13,7 +13,8 @@
     "label": "比分头条",
     "match": "墨西哥 vs 南非赛果更新",
     "time": "08:20",
-    "body": "BBC 体育 更新了墨西哥与南非揭幕战相关赛果，是今天首页最该先看的比分新闻。",
+    "body": "ESPN 足球 更新了墨西哥与南非揭幕战相关赛果，是今天首页最该先看的比分新闻。",
+    "image": "https://digitalhub.fifa.com/transform/eb9b5c03-9e8f-41ab-92c8-370d012b7c87/FIFA-World-Cup-stadium-capacities-confirmed",
     "metrics": [
       {
         "label": "更新模式",
@@ -26,81 +27,93 @@
       },
       {
         "label": "来源置信",
-        "value": "98%"
+        "value": "96%"
       }
     ]
   },
   "pulseCards": [
     {
-      "id": "feed-0-three-red-cards-shown-as-mexico-",
+      "id": "feed-0-2026-world-cup-recap-mexico-kick",
       "kind": "今日头条",
-      "title": "墨西哥 vs 南非赛果更新",
-      "summary": "BBC 体育 更新了墨西哥与南非揭幕战相关赛果，是今天首页最该先看的比分新闻。",
-      "why": "BBC 体育 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "先看进球时间、晋级影响和小组排名变化，再决定是否回看集锦。",
-      "confidence": 90,
-      "source": "BBC 体育",
-      "url": "https://www.bbc.com/sport/football/videos/cx2dyr3e1zro?at_medium=RSS&at_campaign=rss",
-      "tone": "amber"
-    },
-    {
-      "id": "feed-1-murat-yakin-we-can-beat-the-bigg",
-      "kind": "新闻线索",
-      "title": "今日赛果新闻更新",
-      "summary": "FIFA 官方 更新了今日赛果或比分动态，适合放在首页头条。",
-      "why": "FIFA 官方 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "先看进球时间、晋级影响和小组排名变化，再决定是否回看集锦。",
-      "confidence": 98,
-      "source": "FIFA 官方",
-      "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQNlQ3YjJfdGxLQkNzRld3cFRsVnhOeGtKRWp0ZTgyYVRoOHRwUXF4a2J5bmttY0tWX2tKc3hwMWNObXVnQ093clJjRC1CWGJWQnNndXdpMlBHQjZMTHNvcTJiMldmSXA2WWpwWl9lQXBYbTdBSkh0R3VkNE16UDZpOHhvaDNNcXdyMjN5NXlkek1EZ296VkpMV0dBMFZjaGdmRVpYVzF5QkFPLTJ0Q2dScFdB?oc=5",
-      "tone": "green"
-    },
-    {
-      "id": "feed-2-fifa-world-cup-2026-points-table",
-      "kind": "赛前动态",
-      "title": "积分榜与最新赛果更新",
-      "summary": "Firstpost 更新了赛果和积分榜信息，适合快速判断小组形势变化。",
-      "why": "Firstpost 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "先看进球时间、晋级影响和小组排名变化，再决定是否回看集锦。",
-      "confidence": 82,
-      "source": "Firstpost",
-      "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxPNjlDTlZVallIMXdIdkVoWGRTd09RSllOcmdpUjN4ZDJUTkFhTWxvaDF5dExqbHRtWlloR1NwVEozSkhUMlY3UWp2SWtXbmtKanZSak9UU1lJODdOSjR1MXdMTFJOeEpuWjI5QjZ4OWRySE5ia0ZaOGZza3k1Z2NHS2ktdndZcEdCS3dZQ3RHOEhLc2RkQ0RvWnlxeXpXQkZFY1ZoYjJheVFOWDhoYmdLWjdRTDNMdzBidmJz0gHAAUFVX3lxTFBBSTJVV2pObk9ZTmY3UEttVXRWWE0wekQ2UlU1a1BHdVhlU05mQ0J1REd4YzJUZmhvSWwyZXZJX1hKc29UcG1qRWlNRGlGWW1heGhmR1RfelotWWM2Mnk4N044NVVJRHRuc1Y5VTlnMDhrUmlSVnRvX3haS0tldi10VlEyZmtwSENJTFduSm1kZlJIZDhBWFM1b0dHYkZXdFRHbVRsMmVOcXRFZDJTTFVhajZub2JwQ2hoRGFHRlF1TQ?oc=5",
-      "tone": "steel"
-    },
-    {
-      "id": "feed-3-tottenham-s-senesi-called-up-to-",
-      "kind": "赛程雷达",
-      "title": "伤病与名单出现新变化",
-      "summary": "ESPN 足球 更新了球员健康或名单调整信息，赛前阵容还需要继续确认。",
-      "why": "ESPN 足球 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "重点看门将、中卫、后腰和边路位置是否临场换人，这些位置最容易改变比赛走势。",
-      "confidence": 88,
-      "source": "ESPN 足球",
-      "url": "https://www.espn.com/soccer/story/_/id/49032417/tottenham-defender-marcos-senesi-called-argentina-world-cup-squad",
-      "tone": "blue"
-    },
-    {
-      "id": "feed-4-liverpool-s-endo-out-of-wc-retir",
-      "kind": "伤病观察",
-      "title": "伤病与名单出现新变化",
-      "summary": "ESPN 足球 更新了球员健康或名单调整信息，赛前阵容还需要继续确认。",
-      "why": "ESPN 足球 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "重点看门将、中卫、后腰和边路位置是否临场换人，这些位置最容易改变比赛走势。",
-      "confidence": 88,
-      "source": "ESPN 足球",
-      "url": "https://www.espn.com/soccer/story/_/id/49032127/japan-captain-wataru-endo-world-cup-injury-announces-retirement",
-      "tone": "green"
-    },
-    {
-      "id": "feed-5-2026-world-cup-recap-mexico-kick",
-      "kind": "今日暗线",
       "title": "墨西哥 vs 南非赛果更新",
       "summary": "ESPN 足球 更新了墨西哥与南非揭幕战相关赛果，是今天首页最该先看的比分新闻。",
       "why": "ESPN 足球 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
       "watch": "先看进球时间、晋级影响和小组排名变化，再决定是否回看集锦。",
-      "confidence": 88,
+      "confidence": 74,
       "source": "ESPN 足球",
       "url": "https://www.espn.com/soccer/story/_/id/49003509/2026-fifa-world-cup-live-updates-mexico-vs-south-africa",
+      "image": "https://digitalhub.fifa.com/transform/eb9b5c03-9e8f-41ab-92c8-370d012b7c87/FIFA-World-Cup-stadium-capacities-confirmed",
+      "imageAlt": "2026 World Cup recap: Mexico kicks off World Cup w...",
+      "tone": "amber"
+    },
+    {
+      "id": "feed-1-fifa-world-cup-2026-set-to-break",
+      "kind": "新闻线索",
+      "title": "赛程与对阵线索更新",
+      "summary": "FIFA 官方 带来了赛程、分组或具体对阵的新线索，会影响今天的观赛优先级。",
+      "why": "FIFA 官方 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
+      "watch": "优先看东道主、强队首秀和小组关键场，普通信息可以等晚间简报再处理。",
+      "confidence": 96,
+      "source": "FIFA 官方",
+      "url": "https://www.inside.fifa.com/news/fifa-world-cup-stadium-capacities-confirmed",
+      "image": "https://digitalhub.fifa.com/transform/eb9b5c03-9e8f-41ab-92c8-370d012b7c87/FIFA-World-Cup-stadium-capacities-confirmed",
+      "imageAlt": "FIFA World Cup™ stadium capacities confirmed",
+      "tone": "green"
+    },
+    {
+      "id": "feed-2-fifa-president-welcomes-team-one",
+      "kind": "赛前动态",
+      "title": "赛程与对阵线索更新",
+      "summary": "FIFA 官方 带来了赛程、分组或具体对阵的新线索，会影响今天的观赛优先级。",
+      "why": "FIFA 官方 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
+      "watch": "优先看东道主、强队首秀和小组关键场，普通信息可以等晚间简报再处理。",
+      "confidence": 96,
+      "source": "FIFA 官方",
+      "url": "https://www.inside.fifa.com/news/fifa-president-welcomes-team-one-at-training-camp-in-miami",
+      "image": "https://digitalhub.fifa.com/transform/2cfdd8a8-fd7e-4c55-b387-5741fe4d9623/Referees-Training-Session-FIFA-World-Cup-2026",
+      "imageAlt": "MIAMI, FLORIDA - JUNE 6 A group picture during a referee training session at Miami DADE College on June 6, 2026 in Miami, Florida. (Photo by Eva Marie Uzcategui - FIFA/FIFA via Getty Images)",
+      "tone": "steel"
+    },
+    {
+      "id": "feed-3-exactly-what-fifa-stands-for-fif",
+      "kind": "赛程雷达",
+      "title": "赛程与对阵线索更新",
+      "summary": "FIFA 官方 带来了赛程、分组或具体对阵的新线索，会影响今天的观赛优先级。",
+      "why": "FIFA 官方 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
+      "watch": "优先看东道主、强队首秀和小组关键场，普通信息可以等晚间简报再处理。",
+      "confidence": 96,
+      "source": "FIFA 官方",
+      "url": "https://www.inside.fifa.com/news/refurbished-community-football-pitch-miami",
+      "image": "https://digitalhub.fifa.com/transform/2d8cead5-a7f5-44d5-b216-18bae26341f8/KIPP-Miami-Public-Schools-Football-Pitch-Refurbishment-Ribbon-Cutting-Ceremony",
+      "imageAlt": "MIAMI, FLORIDA - JUNE 3: The ribbon cutting ceremony of a football pitch refurbishment on June 3, 2026 in Miami, Florida. (Photo by Eva Marie Uzcategui - FIFA/FIFA via Getty Images)",
+      "tone": "blue"
+    },
+    {
+      "id": "feed-4-gianni-infantino-celebrates-ital",
+      "kind": "伤病观察",
+      "title": "场外热度继续升温",
+      "summary": "FIFA 官方 关注了球迷、票务、开幕式或转播层面的变化，说明赛事关注度正在升高。",
+      "why": "FIFA 官方 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
+      "watch": "这类信息主要影响观看体验和传播热度，比赛判断仍以赛前阵容为准。",
+      "confidence": 96,
+      "source": "FIFA 官方",
+      "url": "https://www.inside.fifa.com/news/gianni-infantino-italian-heritage-footballs-influence-new-york-city-event",
+      "image": "https://digitalhub.fifa.com/transform/9ef0f8cb-0e1d-4471-bc13-6a090ecc4d75/FIFA-President-Gianni-Infantino-Attends-Mass-at-St-Patrick-s-Old-Cathedral",
+      "imageAlt": "NEW YORK, NEW YORK - JUNE 7: FIFA President Gianni Infantino attends mass at St. Patrick's Cathedral on June 7, 2026 in New York City. (Photo by Ira L. Black - FIFA/FIFA via Getty Images)",
+      "tone": "green"
+    },
+    {
+      "id": "feed-5-murat-yakin-we-can-beat-the-bigg",
+      "kind": "今日暗线",
+      "title": "今日赛果新闻更新",
+      "summary": "FIFA 官方 更新了今日赛果或比分动态，适合放在首页头条。",
+      "why": "FIFA 官方 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
+      "watch": "先看进球时间、晋级影响和小组排名变化，再决定是否回看集锦。",
+      "confidence": 96,
+      "source": "FIFA 官方",
+      "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQNlQ3YjJfdGxLQkNzRld3cFRsVnhOeGtKRWp0ZTgyYVRoOHRwUXF4a2J5bmttY0tWX2tKc3hwMWNObXVnQ093clJjRC1CWGJWQnNndXdpMlBHQjZMTHNvcTJiMldmSXA2WWpwWl9lQXBYbTdBSkh0R3VkNE16UDZpOHhvaDNNcXdyMjN5NXlkek1EZ296VkpMV0dBMFZjaGdmRVpYVzF5QkFPLTJ0Q2dScFdB?oc=5",
+      "image": "https://digitalhub.fifa.com/transform/eb9b5c03-9e8f-41ab-92c8-370d012b7c87/FIFA-World-Cup-stadium-capacities-confirmed",
+      "imageAlt": "Murat Yakin: We can beat the biggest teams",
       "tone": "amber"
     }
   ],
@@ -153,40 +166,46 @@
   ],
   "sourceLinks": [
     {
-      "name": "BBC 体育",
-      "type": "新闻源",
-      "confidence": 90,
-      "url": "https://www.bbc.com/sport/football/videos/cx2dyr3e1zro?at_medium=RSS&at_campaign=rss"
-    },
-    {
       "name": "ESPN 足球",
       "type": "新闻源",
-      "confidence": 88,
-      "url": "https://www.espn.com/soccer/story/_/id/49003509/2026-fifa-world-cup-live-updates-mexico-vs-south-africa"
+      "confidence": 74,
+      "url": "https://www.espn.com/soccer/story/_/id/49003509/2026-fifa-world-cup-live-updates-mexico-vs-south-africa",
+      "image": "https://digitalhub.fifa.com/transform/eb9b5c03-9e8f-41ab-92c8-370d012b7c87/FIFA-World-Cup-stadium-capacities-confirmed"
     },
     {
-      "name": "ESPN 足球",
+      "name": "FIFA 官方",
       "type": "新闻源",
-      "confidence": 82,
-      "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQVmtaZXV0UDVRV2pmZHNzR28wX2FhcFdFZGdudzFwN0d1bVJJQmhITTJIejBvenJSd2VqUmJCTVlKbGdsNDJZaUo0X0F4VDctQXhyOU0wR2YzSlVSWE1sMFZfbnZjeUtIWEM2NlljV0g2VWdLTFJyUVhsRjV4bEpVLXFBbkxYRHhNS1o1Q1dwWk8yczBRMENHZGY4MVBJMU03eVhzb1RR?oc=5"
+      "confidence": 96,
+      "url": "https://www.inside.fifa.com/news/fifa-world-cup-stadium-capacities-confirmed",
+      "image": "https://digitalhub.fifa.com/transform/eb9b5c03-9e8f-41ab-92c8-370d012b7c87/FIFA-World-Cup-stadium-capacities-confirmed"
     },
     {
-      "name": "BBC",
+      "name": "FIFA 官方",
       "type": "新闻源",
-      "confidence": 82,
-      "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE0wWVdFN1hzbkU1MEdoc2NBWWMzcThCMlJYZ0tkUjdtOHp4dE80LXJreEhwZ1FiM2tpRVAyRENkSW1rU19KQmdUNDFLZEpaTFNfU0dZQ2hwZjUtM0k30gFiQVVfeXFMUEZ4cVhtcEdGVWhiRWh3NXRXVjBsejFEUXpfb0k2X3ptcWs5bnV0VWZld3V0RFEzOUVic2s5a1k0T0hNcmdVT2ZLX3R2RFBxVmRsWE4yWXJaMnR4UkowaWdhTnc?oc=5"
+      "confidence": 96,
+      "url": "https://www.inside.fifa.com/news/fifa-president-welcomes-team-one-at-training-camp-in-miami",
+      "image": "https://digitalhub.fifa.com/transform/2cfdd8a8-fd7e-4c55-b387-5741fe4d9623/Referees-Training-Session-FIFA-World-Cup-2026"
     },
     {
-      "name": "The Straits Times",
+      "name": "FIFA 官方",
       "type": "新闻源",
-      "confidence": 80,
-      "url": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxOWkc5dHdVU3h1LXlvOXlCLVp2NnM3eWZTQ2hhWTdTc3BqWnVMMXBIdXNZb3BxZndzWEJjRkNsNkZ6QWdqbXZpS3M4QWh3ZmFRelczZ1hUZTZiZWREVDRpRWczcWFMaHpUdGJTR3YwYVljRHFvdU9mZExKVDF4QTZNcDFUcTBqR0JKZS1yTU82X0EwdnBvS2VzZDFWVGNwelBkLWtHLXpGY0VzWWg4MjdzQ2RWczFXUl9TMl95dWJFRC04bEs2WVdGb0NxM1VZQl9wQWZURm13?oc=5"
+      "confidence": 96,
+      "url": "https://www.inside.fifa.com/news/refurbished-community-football-pitch-miami",
+      "image": "https://digitalhub.fifa.com/transform/2d8cead5-a7f5-44d5-b216-18bae26341f8/KIPP-Miami-Public-Schools-Football-Pitch-Refurbishment-Ribbon-Cutting-Ceremony"
     },
     {
-      "name": "Sportstar",
+      "name": "FIFA 官方",
       "type": "新闻源",
-      "confidence": 80,
-      "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxNaWhTaWZXdE16WWlaREJURGZFOUVaWFltRk9LSWxpcGMxbzJhT1VPUWtmdGl6MEF4TV9CWVY5djI4S0syY1R0MlRfUjBOeG92MHVjblpPQ2pJLVh2Y05KMXo4YUVuQmYzV0ZHaFlIb2t6QTc0N2p1WFk2d1VVY3RCY1J4NDhtdjRkSnR6TVo0c1lTV2t3dEdrUWZ6eFVKWmxONDdTNUl1WDZyRGlhSFFweFNXakxxbW1XNjlvQmQ0US04TGZaek93WXln0gHQAUFVX3lxTFB1VDc4cm1VdDlOTGhMSGpDWDl1cllOT3cxY2VXRjA0M2xVdlJQaWhLQUdaSWFxdDRlV3QxUGppYzduMzBXdkU1aVE4QU5kMUxlUEY5WE41U0V4X1FIYk5qQm1EZnhZNGpsOGxkemRJZ19FM2tIYmZVWFBjSjJIMXJmVUEwbWVJaUZ2WkNDN0pkOWZJeGZwNFhHZi14blJEOXVFRzF1LXZJcTNSQlp3UmI5dUIxd3c1LUdfdTBsOG5QUEljVUpUc3JBWVdoR0VXMTk?oc=5"
+      "confidence": 96,
+      "url": "https://www.inside.fifa.com/news/gianni-infantino-italian-heritage-footballs-influence-new-york-city-event",
+      "image": "https://digitalhub.fifa.com/transform/9ef0f8cb-0e1d-4471-bc13-6a090ecc4d75/FIFA-President-Gianni-Infantino-Attends-Mass-at-St-Patrick-s-Old-Cathedral"
+    },
+    {
+      "name": "FIFA 官方",
+      "type": "新闻源",
+      "confidence": 96,
+      "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQNlQ3YjJfdGxLQkNzRld3cFRsVnhOeGtKRWp0ZTgyYVRoOHRwUXF4a2J5bmttY0tWX2tKc3hwMWNObXVnQ093clJjRC1CWGJWQnNndXdpMlBHQjZMTHNvcTJiMldmSXA2WWpwWl9lQXBYbTdBSkh0R3VkNE16UDZpOHhvaDNNcXdyMjN5NXlkek1EZ296VkpMV0dBMFZjaGdmRVpYVzF5QkFPLTJ0Q2dScFdB?oc=5",
+      "image": "https://digitalhub.fifa.com/transform/eb9b5c03-9e8f-41ab-92c8-370d012b7c87/FIFA-World-Cup-stadium-capacities-confirmed"
     }
   ],
   "notification": {
