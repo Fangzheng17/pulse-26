@@ -1,4 +1,4 @@
-{
+﻿{
   "version": 1,
   "generatedAt": "2026-06-11T17:01:55.001Z",
   "generatedFor": "morning",
@@ -7,7 +7,7 @@
     "title": "PULSE 26 世界杯晨报",
     "subtitle": "北京时间 2026/06/12 01:01 · 新闻源自动更新",
     "status": "RSS fallback",
-    "summary": "今日内容来自公开新闻源自动汇总。配置 OPENAI_API_KEY 后会升级为中文编辑判断版。"
+    "summary": "今日内容来自公开新闻源自动汇总。配置 AI_PROVIDER 和 AI_API_KEY 后会升级为中文编辑判断版。"
   },
   "topPick": {
     "label": "Today's Lead",
@@ -37,7 +37,7 @@
       "title": "World Cup 2026: teams qualified, k",
       "summary": "World Cup 2026: teams qualified, key players and fix",
       "why": "Reuters 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "点开来源阅读原文；如果配置 OPENAI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
+      "watch": "点开来源阅读原文；如果配置 AI_PROVIDER 和 AI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
       "confidence": 92,
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxPQXhvRmJpN3k2aGxZTVl5LWpVOU9NRXdBTDdWNUVqaGFWYXl0QTQ2WVF5cUQ4aDJKVVh4WVRmV0NuWWtTbWMyeVJhN2tGeHlxUnRDX012OTJmd2s5bzFRM1RJWEhtc2VGbXU2QjZVNmNlVXExcVVwT0ZtX2t5U281cmR1YjZFY18xTmowZi1tOUdKclVHUmJ1ZjJNNzJ0RXl6TkdF?oc=5",
@@ -49,7 +49,7 @@
       "title": "How are the Fifa world rankings de",
       "summary": "BBC Sport's Ask Me Anything team explains how the me",
       "why": "BBC Sport 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "点开来源阅读原文；如果配置 OPENAI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
+      "watch": "点开来源阅读原文；如果配置 AI_PROVIDER 和 AI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
       "confidence": 90,
       "source": "BBC Sport",
       "url": "https://www.bbc.com/sport/football/articles/crm0n2e9le8o?at_medium=RSS&at_campaign=rss",
@@ -61,7 +61,7 @@
       "title": "United States at the FIFA World Cu",
       "summary": "United States at the FIFA World Cup 2026: News, Fixt",
       "why": "Reuters 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "点开来源阅读原文；如果配置 OPENAI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
+      "watch": "点开来源阅读原文；如果配置 AI_PROVIDER 和 AI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
       "confidence": 92,
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE1XY3E4NVp4eG9lRVBtMWVZZ1NBYTdqQmxJQkNFXy1OekM1VHp0ckVUejQwaEJqbWJqNm9kRmVZTEFFelJFUDBhaGJYenZBRjJ6N3FnVTFJYXR5WU1XakdJZjVjQkNLaTRfWDVwalVMMA?oc=5",
@@ -73,7 +73,7 @@
       "title": "Morocco forced into two injury cha",
       "summary": "Morocco forced into two injury changes ahead of Worl",
       "why": "Reuters 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "点开来源阅读原文；如果配置 OPENAI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
+      "watch": "点开来源阅读原文；如果配置 AI_PROVIDER 和 AI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
       "confidence": 92,
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNTVEzdFhIeVhybjhfcFJxd3lBSXY1LXVjMjBUdEI2VTZidFV1LUZPZExuYWk5bWUySEpTQklPNEc2VnRaTHNRRTdUb1NHRzd2RmNFRk1XSGJtQ0puM09RSmNhRlhOWXBka0RjT1JkbUd4dlRRdE4yZU9pOWh4a09iZE5mNjlVSE9nLWY0ZFVrM2dfdTdJNUNSSFM2YjFzd1BKNjFzS0xnNmYxdmxPdDdRdw?oc=5",
@@ -85,7 +85,7 @@
       "title": "South Korea vs Czechia: World Cup ",
       "summary": "South Korea vs Czechia: World Cup group match – team",
       "why": "Reuters 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "点开来源阅读原文；如果配置 OPENAI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
+      "watch": "点开来源阅读原文；如果配置 AI_PROVIDER 和 AI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
       "confidence": 92,
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxOaTh0eHdSSDVmVy1HdEpoRC04QngyakhTYkpqdHpwcTZWSm9IdDAwaVpTQnl5SHdqY08tOHZkcnZ5aHNUdHRmS3NZT0FNRG43VS1GZDNDbjFZbGFUbk1LeU5FQ2dweEpidHh3MlJSVzBOQW1DWndQaDYyMkJyRzVIS1hVcDBYWEVBbmx1TUR1dnBoT283SnpIcGFyV2k0TWlYVC1QSjNTTmZtUGpPT3NjY9IBtgFBVV95cUxPT1IwVWU2NXo3QmNlQmMtdHl6WURBb1ppam80TkViMFp6Z21Dc3JjM2VlNEV2WTEtczA3MEpETG5tMUN2TVhWd0dZQnYyNW9wVHJNYnV6NjR6U2J1VXpJSnhxSTFhbFpJTFNnT3gxQkpISnJuTlZWdDlnMUp5b3VkZVY4dkVHNHFCYVdNZk93Z1IxVHpZVEV5MzJnMThaQkJjN3MyVTBZZ21hWnlRbHdkY1VRQjlwdw?oc=5",
@@ -97,7 +97,7 @@
       "title": "Germany players will pay for 600 f",
       "summary": "Germany's players will pay for 600 of the country's ",
       "why": "BBC Sport 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "点开来源阅读原文；如果配置 OPENAI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
+      "watch": "点开来源阅读原文；如果配置 AI_PROVIDER 和 AI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
       "confidence": 90,
       "source": "BBC Sport",
       "url": "https://www.bbc.com/sport/football/articles/c9v2nvm02llo?at_medium=RSS&at_campaign=rss",

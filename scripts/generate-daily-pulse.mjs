@@ -3,8 +3,10 @@ import { writeFile } from "node:fs/promises";
 const outputPath = new URL("../public/daily-pulse.json", import.meta.url);
 const kind = process.argv.find((arg) => arg.startsWith("--kind="))?.split("=")[1] || inferKind();
 const pulseUrl = process.env.PULSE_URL || "https://fangzheng17.github.io/pulse-26/";
-const openaiKey = process.env.OPENAI_API_KEY?.trim();
-const openaiModel = process.env.OPENAI_MODEL?.trim() || "gpt-5.4-mini";
+const aiProvider = resolveProvider();
+const aiKey = resolveAiKey();
+const aiModel = process.env.AI_MODEL?.trim() || process.env.OPENAI_MODEL?.trim() || defaultModel(aiProvider);
+const aiBaseUrl = (process.env.AI_BASE_URL?.trim() || defaultBaseUrl(aiProvider)).replace(/\/$/, "");
 
 const feeds = [
   {
@@ -64,6 +66,46 @@ function inferKind() {
     hour12: false
   }).format(new Date()));
   return hour < 14 ? "morning" : "night";
+}
+
+function resolveProvider() {
+  const explicit = process.env.AI_PROVIDER?.trim().toLowerCase();
+  if (explicit) return explicit;
+  if (process.env.DEEPSEEK_API_KEY?.trim()) return "deepseek";
+  if (process.env.OPENROUTER_API_KEY?.trim()) return "openrouter";
+  if (process.env.OPENAI_API_KEY?.trim()) return "openai";
+  return "rss";
+}
+
+function resolveAiKey() {
+  return process.env.AI_API_KEY?.trim()
+    || process.env.DEEPSEEK_API_KEY?.trim()
+    || process.env.OPENROUTER_API_KEY?.trim()
+    || process.env.OPENAI_API_KEY?.trim()
+    || "";
+}
+
+function defaultBaseUrl(provider) {
+  const baseUrls = {
+    deepseek: "https://api.deepseek.com",
+    openrouter: "https://openrouter.ai/api/v1",
+    openai: "https://api.openai.com/v1"
+  };
+  return baseUrls[provider] ?? baseUrls.openai;
+}
+
+function defaultModel(provider) {
+  const models = {
+    deepseek: "deepseek-v4-flash",
+    openrouter: "deepseek/deepseek-chat",
+    openai: "gpt-5.4-mini"
+  };
+  return models[provider] ?? models.openai;
+}
+
+function chatCompletionsEndpoint() {
+  if (aiBaseUrl.endsWith("/chat/completions")) return aiBaseUrl;
+  return `${aiBaseUrl}/chat/completions`;
 }
 
 function beijingStamp(date = new Date()) {
@@ -183,9 +225,9 @@ function fallbackCards(articles) {
     id: `feed-${index}-${slug(article.title)}`,
     kind: index === 0 ? "今日头条" : ["新闻线索", "赛前动态", "赛程雷达", "伤病观察", "今日暗线"][index - 1] ?? "新闻线索",
     title: article.title.slice(0, 34),
-    summary: (article.summary || "来自公开新闻源的世界杯更新。").slice(0, 52),
+    summary: cleanSummary(article.summary).slice(0, 52),
     why: `${article.source} 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。`,
-    watch: "点开来源阅读原文；如果配置 OPENAI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
+    watch: "点开来源阅读原文；如果配置 AI_PROVIDER 和 AI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
     confidence: article.confidence ?? 80,
     source: article.source,
     url: article.url,
@@ -193,13 +235,20 @@ function fallbackCards(articles) {
   }));
 }
 
+function cleanSummary(value) {
+  const summary = String(value ?? "").trim();
+  if (!summary || summary.toLowerCase() === "null" || summary.toLowerCase() === "undefined") {
+    return "来自公开新闻源的世界杯更新。";
+  }
+  return summary;
+}
+
 function slug(value) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 32) || "story";
 }
 
-async function generateWithOpenAI(articles) {
-  if (!openaiKey) return null;
-  const prompt = [
+function buildPrompt(articles) {
+  return [
     "你是我的 2026 世界杯私人赛事编辑。基于候选新闻源，生成今日 PULSE 26 JSON。",
     "必须只输出 JSON，不要 Markdown，不要解释。",
     "要求：中文；5-8 张卡片；不要编造未确认信息；每张卡要有判断、看点和来源。",
@@ -231,27 +280,56 @@ async function generateWithOpenAI(articles) {
     `北京时间：${beijingStamp()}`,
     `候选新闻源：${JSON.stringify(articles.slice(0, 16), null, 2)}`
   ].join("\n\n");
+}
 
-  const response = await fetch("https://api.openai.com/v1/responses", {
+async function generateWithAI(articles) {
+  if (!aiKey || aiProvider === "rss") return null;
+  const prompt = buildPrompt(articles);
+
+  const headers = {
+    Authorization: `Bearer ${aiKey}`,
+    "Content-Type": "application/json"
+  };
+  if (aiProvider === "openrouter") {
+    headers["HTTP-Referer"] = pulseUrl;
+    headers["X-OpenRouter-Title"] = "PULSE 26";
+  }
+
+  const requestBody = {
+    model: aiModel,
+    messages: [
+      {
+        role: "system",
+        content: "你是严谨的中文体育新闻编辑，只返回有效 JSON。"
+      },
+      {
+        role: "user",
+        content: prompt
+      }
+    ],
+    temperature: 0.3,
+    max_tokens: 2600,
+    stream: false
+  };
+  if (aiProvider === "deepseek") {
+    requestBody.thinking = { type: "disabled" };
+  }
+
+  const response = await fetch(chatCompletionsEndpoint(), {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${openaiKey}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      model: openaiModel,
-      input: prompt
-    })
+    headers,
+    body: JSON.stringify(requestBody)
   });
 
   if (!response.ok) {
-    throw new Error(`OpenAI API failed: ${response.status} ${await response.text()}`);
+    throw new Error(`${aiProvider} API failed: ${response.status} ${await response.text()}`);
   }
 
   const payload = await response.json();
-  const outputText = payload.output_text
-    ?? payload.output?.flatMap((item) => item.content ?? []).map((content) => content.text ?? "").join("\n")
-    ?? "";
+  const message = payload.choices?.[0]?.message?.content ?? "";
+  const outputText = Array.isArray(message)
+    ? message.map((part) => typeof part === "string" ? part : part.text ?? "").join("\n")
+    : message;
   return JSON.parse(extractJson(outputText));
 }
 
@@ -265,11 +343,12 @@ function extractJson(text) {
 function buildPulsePayload(cards, articles, sourceMode, aiPayload = {}) {
   const topStory = cards[0];
   const now = new Date();
+  const aiMode = sourceMode !== "rss";
   const title = aiPayload.meta?.title ?? (kind === "night" ? "PULSE 26 夜场预告" : "PULSE 26 世界杯晨报");
-  const subtitle = aiPayload.meta?.subtitle ?? `北京时间 ${beijingStamp(now)} · ${sourceMode === "openai" ? "AI 生成" : "新闻源自动更新"}`;
+  const subtitle = aiPayload.meta?.subtitle ?? `北京时间 ${beijingStamp(now)} · ${aiMode ? `${sourceMode} 生成` : "新闻源自动更新"}`;
   const sourceLinks = articles.slice(0, 4).map((article) => ({
     name: article.source,
-    type: sourceMode === "openai" ? "AI候选源" : "新闻源",
+    type: aiMode ? "AI候选源" : "新闻源",
     confidence: article.confidence ?? 82,
     url: article.url
   }));
@@ -282,8 +361,8 @@ function buildPulsePayload(cards, articles, sourceMode, aiPayload = {}) {
     meta: {
       title,
       subtitle,
-      status: sourceMode === "openai" ? `OpenAI ${openaiModel}` : "RSS fallback",
-      summary: aiPayload.meta?.summary ?? "今日内容来自公开新闻源自动汇总。配置 OPENAI_API_KEY 后会升级为中文编辑判断版。"
+      status: aiMode ? `${aiProvider} ${aiModel}` : "RSS fallback",
+      summary: aiPayload.meta?.summary ?? "今日内容来自公开新闻源自动汇总。配置 AI_PROVIDER 和 AI_API_KEY 后会升级为中文编辑判断版。"
     },
     topPick: aiPayload.topPick ?? {
       label: kind === "night" ? "Night Watch" : "Today's Lead",
@@ -291,7 +370,7 @@ function buildPulsePayload(cards, articles, sourceMode, aiPayload = {}) {
       time: kind === "night" ? "21:30" : "08:20",
       body: topStory?.summary || "今日世界杯候选新闻已经更新，点开卡片查看来源和重点。",
       metrics: [
-        { label: "更新模式", value: sourceMode === "openai" ? "AI" : "RSS", accent: true },
+        { label: "更新模式", value: aiMode ? "AI" : "RSS", accent: true },
         { label: "候选新闻", value: String(articles.length) },
         { label: "来源置信", value: `${Math.max(...cards.map((card) => card.confidence ?? 70))}%` }
       ]
@@ -336,10 +415,10 @@ async function main() {
   const articles = await collectArticles();
   let sourceMode = "rss";
   let aiPayload = null;
-  if (openaiKey) {
+  if (aiKey && aiProvider !== "rss") {
     try {
-      aiPayload = normalizeAiPayload(await generateWithOpenAI(articles), articles);
-      sourceMode = "openai";
+      aiPayload = normalizeAiPayload(await generateWithAI(articles), articles);
+      sourceMode = aiProvider;
     } catch (error) {
       console.warn(error.message);
       sourceMode = "rss";

@@ -160,7 +160,7 @@ function App() {
           meta: { ...fallbackPulse.meta, ...json.meta },
           topPick: { ...fallbackPulse.topPick, ...json.topPick }
         });
-        setDataStatus(json.sourceMode === "openai" ? "AI 今日简报" : "新闻源自动更新");
+        setDataStatus(json.sourceMode && json.sourceMode !== "rss" ? `${json.sourceMode} 今日简报` : "新闻源自动更新");
       })
       .catch(() => {
         if (active) setDataStatus("备用内容");
