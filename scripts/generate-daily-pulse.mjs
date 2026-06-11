@@ -15,22 +15,22 @@ const feeds = [
     url: googleNewsUrl("site:fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026 FIFA World Cup 2026")
   },
   {
-    source: "Reuters",
+    source: "路透社",
     confidence: 92,
     url: googleNewsUrl("Reuters FIFA World Cup 2026")
   },
   {
-    source: "BBC Sport",
+    source: "BBC 体育",
     confidence: 90,
     url: "https://feeds.bbci.co.uk/sport/football/rss.xml"
   },
   {
-    source: "ESPN Soccer",
+    source: "ESPN 足球",
     confidence: 88,
     url: "https://www.espn.com/espn/rss/soccer/news"
   },
   {
-    source: "Google News",
+    source: "谷歌新闻",
     confidence: 82,
     url: googleNewsUrl("2026 World Cup Mexico South Africa opening match injuries lineups")
   }
@@ -221,24 +221,86 @@ function fallbackCards(articles) {
       url: pulseUrl
     }
   ];
-  return usable.slice(0, 6).map((article, index) => ({
-    id: `feed-${index}-${slug(article.title)}`,
-    kind: index === 0 ? "今日头条" : ["新闻线索", "赛前动态", "赛程雷达", "伤病观察", "今日暗线"][index - 1] ?? "新闻线索",
-    title: article.title.slice(0, 34),
-    summary: cleanSummary(article.summary).slice(0, 52),
-    why: `${article.source} 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。`,
-    watch: "点开来源阅读原文；如果配置 AI_PROVIDER 和 AI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
-    confidence: article.confidence ?? 80,
-    source: article.source,
-    url: article.url,
-    tone: ["amber", "green", "steel", "blue", "green", "amber"][index % 6]
-  }));
+  return usable.slice(0, 6).map((article, index) => {
+    const localized = localizeArticle(article, index);
+    return {
+      id: `feed-${index}-${slug(article.title)}`,
+      kind: index === 0 ? "今日头条" : ["新闻线索", "赛前动态", "赛程雷达", "伤病观察", "今日暗线"][index - 1] ?? "新闻线索",
+      title: localized.title,
+      summary: localized.summary,
+      why: `${article.source} 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。`,
+      watch: localized.watch,
+      confidence: article.confidence ?? 80,
+      source: article.source,
+      url: article.url,
+      tone: ["amber", "green", "steel", "blue", "green", "amber"][index % 6]
+    };
+  });
+}
+
+function localizeArticle(article, index) {
+  const text = `${article.title} ${cleanSummary(article.summary)}`.toLowerCase();
+  const source = article.source || "公开新闻源";
+  const categories = [
+    {
+      pattern: /injur|hurt|replace|withdraw|fitness|recover|saka|aguerd|ezzalzouli/,
+      title: "伤病与名单出现新变化",
+      summary: `${source} 更新了球员健康或名单调整信息，赛前阵容还需要继续确认。`,
+      watch: "重点看门将、中卫、后腰和边路位置是否临场换人，这些位置最容易改变比赛走势。"
+    },
+    {
+      pattern: /lineup|squad|roster|team news|key players|qualified|contender/,
+      title: "参赛队阵容信息更新",
+      summary: `${source} 发布了球队名单、关键球员或出线相关信息，适合放进今日观察池。`,
+      watch: "先确认核心球员是否稳定首发，再看替补深度和第二场轮换风险。"
+    },
+    {
+      pattern: /fixture|schedule|match|group|opening|kickoff|mexico|south africa|korea|czechia/,
+      title: "赛程与对阵线索更新",
+      summary: `${source} 带来了赛程、分组或具体对阵的新线索，会影响今天的观赛优先级。`,
+      watch: "优先看东道主、强队首秀和小组关键场，普通信息可以等晚间简报再处理。"
+    },
+    {
+      pattern: /ranking|rankings|seed|draw/,
+      title: "排名与分组形势值得关注",
+      summary: `${source} 提到了排名、种子或分组相关信息，这会影响后续淘汰赛路径判断。`,
+      watch: "不要只看名次高低，重点看同组对手风格和小组第三规则带来的策略变化。"
+    },
+    {
+      pattern: /betting|odds|favorite|favourites|prediction|pick/,
+      title: "市场预期正在调整",
+      summary: `${source} 的赔率或预测信息显示，外部市场对夺冠和单场走势有了新判断。`,
+      watch: "赔率只能当情绪温度计，不直接当结论；真正要看阵容、赛程密度和伤病。"
+    },
+    {
+      pattern: /fan|ticket|ceremony|opening ceremony|shakira|broadcast/,
+      title: "场外热度继续升温",
+      summary: `${source} 关注了球迷、票务、开幕式或转播层面的变化，说明赛事关注度正在升高。`,
+      watch: "这类信息主要影响观看体验和传播热度，比赛判断仍以赛前阵容为准。"
+    }
+  ];
+  const matched = categories.find((category) => category.pattern.test(text));
+  if (matched) return matched;
+
+  const fallbackTitles = [
+    "世界杯今日重点动态",
+    "参赛球队消息更新",
+    "赛前情报进入观察池",
+    "赛程与阵容出现新线索",
+    "今日新闻需要继续确认",
+    "暗线信息值得留意"
+  ];
+  return {
+    title: fallbackTitles[index] ?? "世界杯动态更新",
+    summary: `${source} 发布了新的世界杯相关消息，已进入今日简报候选。`,
+    watch: "点开来源阅读原文；接入 DeepSeek 或 OpenRouter 后，系统会自动生成更具体的中文判断。"
+  };
 }
 
 function cleanSummary(value) {
   const summary = String(value ?? "").trim();
   if (!summary || summary.toLowerCase() === "null" || summary.toLowerCase() === "undefined") {
-    return "来自公开新闻源的世界杯更新。";
+    return "";
   }
   return summary;
 }
@@ -251,12 +313,12 @@ function buildPrompt(articles) {
   return [
     "你是我的 2026 世界杯私人赛事编辑。基于候选新闻源，生成今日 PULSE 26 JSON。",
     "必须只输出 JSON，不要 Markdown，不要解释。",
-    "要求：中文；5-8 张卡片；不要编造未确认信息；每张卡要有判断、看点和来源。",
+    "要求：中文；5-8 张卡片；不要编造未确认信息；每张卡要有判断、看点和来源；label、kind、title、summary、why、watch、source 都必须用中文。",
     "JSON 结构：",
     JSON.stringify({
       meta: { title: "string", subtitle: "string", status: "string", summary: "string" },
       topPick: {
-        label: "Tonight's Pick",
+        label: "今日重点",
         match: "string",
         time: "HH:mm",
         body: "string",
@@ -361,16 +423,16 @@ function buildPulsePayload(cards, articles, sourceMode, aiPayload = {}) {
     meta: {
       title,
       subtitle,
-      status: aiMode ? `${aiProvider} ${aiModel}` : "RSS fallback",
-      summary: aiPayload.meta?.summary ?? "今日内容来自公开新闻源自动汇总。配置 AI_PROVIDER 和 AI_API_KEY 后会升级为中文编辑判断版。"
+      status: aiMode ? `${providerDisplayName(aiProvider)} 生成` : "新闻源兜底",
+      summary: aiPayload.meta?.summary ?? "今日内容来自公开新闻源自动汇总。接入 DeepSeek 或 OpenRouter 后会升级为中文编辑判断版。"
     },
     topPick: aiPayload.topPick ?? {
-      label: kind === "night" ? "Night Watch" : "Today's Lead",
+      label: kind === "night" ? "夜场重点" : "今日重点",
       match: topStory?.title ?? "2026 世界杯今日动态",
       time: kind === "night" ? "21:30" : "08:20",
       body: topStory?.summary || "今日世界杯候选新闻已经更新，点开卡片查看来源和重点。",
       metrics: [
-        { label: "更新模式", value: aiMode ? "AI" : "RSS", accent: true },
+        { label: "更新模式", value: aiMode ? "智能生成" : "新闻源", accent: true },
         { label: "候选新闻", value: String(articles.length) },
         { label: "来源置信", value: `${Math.max(...cards.map((card) => card.confidence ?? 70))}%` }
       ]
@@ -384,6 +446,15 @@ function buildPulsePayload(cards, articles, sourceMode, aiPayload = {}) {
       message: `${topStory?.title ?? "今日世界杯 Pulse 已更新"}\n\n点开查看完整卡片：${pulseUrl}`
     }
   };
+}
+
+function providerDisplayName(provider) {
+  const names = {
+    deepseek: "DeepSeek",
+    openrouter: "OpenRouter",
+    openai: "OpenAI"
+  };
+  return names[provider] ?? provider;
 }
 
 function normalizeAiPayload(aiPayload, articles) {

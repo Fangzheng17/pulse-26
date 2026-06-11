@@ -12,13 +12,13 @@ export const sourceLinks = [
     url: "https://inside.fifa.com/organisation/media-releases/shakira-burna-dai-dai-world-cup-opening-ceremony-mexico-city"
   },
   {
-    name: "Reuters / AP",
+    name: "路透社 / 美联社",
     type: "新闻",
     confidence: 91,
     url: "https://www.reuters.com/sports/soccer/"
   },
   {
-    name: "BBC / ESPN",
+    name: "BBC / ESPN 体育",
     type: "赛前",
     confidence: 88,
     url: "https://www.bbc.com/sport/football"
@@ -89,7 +89,7 @@ export const pulseCards = [
     why: "世界杯赛前消息密度很高，早报负责判断价值，临场卡负责更新首发、阵型和缺席。",
     watch: "重点球队的门将、后腰、中卫组合，往往比锋线名字更能决定比赛走向。",
     confidence: 90,
-    source: "Reuters / AP / 队伍官方",
+    source: "路透社 / 美联社 / 球队官方",
     tone: "amber"
   }
 ];
@@ -140,10 +140,10 @@ export const fallbackPulse = {
     title: "2026 世界杯开幕周 Pulse",
     subtitle: "静态备用内容",
     status: "等待每日自动更新",
-    summary: "这是网页的备用内容。配置每日新闻流程后，GitHub Actions 会写入新的 daily-pulse.json。"
+    summary: "这是网页的备用内容。配置每日新闻流程后，系统会写入新的每日简报。"
   },
   topPick: {
-    label: "Tonight's Pick",
+    label: "今夜重点",
     match: "墨西哥 vs 南非",
     time: "03:00",
     body: "开幕战，北京时间 6 月 12 日 03:00。我的建议是看上半场：主场情绪、前场压迫和反击第一脚会很快给出这届杯赛的第一条线索。",

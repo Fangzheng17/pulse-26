@@ -32,6 +32,21 @@ const navItems = [
   { label: "来源", icon: ShieldCheck }
 ];
 
+const sourceNameMap = {
+  "BBC / ESPN": "BBC / ESPN",
+  "BBC Sport": "BBC 体育",
+  "ESPN Soccer": "ESPN 足球",
+  "Google News": "谷歌新闻",
+  Reuters: "路透社",
+  "Reuters / AP": "路透社 / 美联社"
+};
+
+const providerLabelMap = {
+  deepseek: "DeepSeek 今日简报",
+  openrouter: "OpenRouter 今日简报",
+  openai: "OpenAI 今日简报"
+};
+
 function formatBeijingTime() {
   return new Intl.DateTimeFormat("zh-CN", {
     timeZone: "Asia/Shanghai",
@@ -50,6 +65,75 @@ function getCountdown() {
   const hours = Math.floor((diff % 86400000) / 3600000);
   const minutes = Math.floor((diff % 3600000) / 60000);
   return { days, hours, minutes };
+}
+
+function displaySourceName(source = "") {
+  return sourceNameMap[source] ?? source;
+}
+
+function hasLatinText(value = "") {
+  return /[A-Za-z]{3,}/.test(String(value));
+}
+
+function localizeRssCard(card, index) {
+  if (!hasLatinText(card.title) && !hasLatinText(card.summary)) {
+    return { ...card, source: displaySourceName(card.source) };
+  }
+
+  const titles = [
+    "世界杯今日重点动态",
+    "参赛球队消息更新",
+    "赛前情报进入观察池",
+    "赛程与阵容出现新线索",
+    "伤病与名单需要继续确认",
+    "今日暗线值得留意"
+  ];
+  const source = displaySourceName(card.source);
+  return {
+    ...card,
+    title: titles[index] ?? "世界杯动态更新",
+    summary: `${source || "公开新闻源"} 发布了新的世界杯相关消息，已进入今日简报候选。`,
+    why: card.why && !hasLatinText(card.why) ? card.why : `${source || "公开新闻源"} 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。`,
+    watch: card.watch && !hasLatinText(card.watch) ? card.watch : "点开来源阅读原文；接入 DeepSeek 或 OpenRouter 后，系统会自动生成更具体的中文判断。",
+    source
+  };
+}
+
+function localizePayload(json) {
+  const sourceMode = json.sourceMode ?? "rss";
+  const isRss = sourceMode === "rss";
+  const pulseCards = Array.isArray(json.pulseCards)
+    ? json.pulseCards.map((card, index) => isRss ? localizeRssCard(card, index) : { ...card, source: displaySourceName(card.source) })
+    : [];
+  const topCard = pulseCards[0];
+  const topPick = {
+    ...json.topPick,
+    label: localizeTopPickLabel(json.topPick?.label, json.generatedFor),
+    match: isRss && topCard ? topCard.title : json.topPick?.match,
+    body: isRss && topCard ? topCard.summary : json.topPick?.body,
+    metrics: Array.isArray(json.topPick?.metrics)
+      ? json.topPick.metrics.map((metric) => ({
+          ...metric,
+          value: metric.value === "RSS" ? "新闻源" : metric.value === "AI" ? "智能生成" : metric.value
+        }))
+      : json.topPick?.metrics
+  };
+
+  return {
+    ...json,
+    pulseCards,
+    topPick,
+    sourceLinks: Array.isArray(json.sourceLinks)
+      ? json.sourceLinks.map((source) => ({ ...source, name: displaySourceName(source.name) }))
+      : json.sourceLinks
+  };
+}
+
+function localizeTopPickLabel(label, generatedFor) {
+  if (!label || hasLatinText(label)) {
+    return generatedFor === "night" ? "夜场重点" : "今日重点";
+  }
+  return label;
 }
 
 function IconButton({ icon: Icon, label, active, onClick }) {
@@ -74,7 +158,7 @@ function SourceMeter({ source }) {
   return (
     <a className="source-row" href={source.url} target="_blank" rel="noreferrer">
       <div>
-        <strong>{source.name}</strong>
+        <strong>{displaySourceName(source.name)}</strong>
         <span>{source.type}</span>
       </div>
       <div className="source-score">
@@ -154,13 +238,14 @@ function App() {
       })
       .then((json) => {
         if (!active || !Array.isArray(json.pulseCards) || json.pulseCards.length === 0) return;
+        const localizedJson = localizePayload(json);
         setDailyPulse({
           ...fallbackPulse,
-          ...json,
-          meta: { ...fallbackPulse.meta, ...json.meta },
-          topPick: { ...fallbackPulse.topPick, ...json.topPick }
+          ...localizedJson,
+          meta: { ...fallbackPulse.meta, ...localizedJson.meta },
+          topPick: { ...fallbackPulse.topPick, ...localizedJson.topPick }
         });
-        setDataStatus(json.sourceMode && json.sourceMode !== "rss" ? `${json.sourceMode} 今日简报` : "新闻源自动更新");
+        setDataStatus(json.sourceMode && json.sourceMode !== "rss" ? providerLabelMap[json.sourceMode] ?? `${json.sourceMode} 今日简报` : "新闻源自动更新");
       })
       .catch(() => {
         if (active) setDataStatus("备用内容");
@@ -253,7 +338,7 @@ function App() {
           </div>
           <div>
             <strong>PULSE 26</strong>
-            <span>World Cup Desk</span>
+            <span>世界杯编辑台</span>
           </div>
         </div>
         <nav>
@@ -296,7 +381,7 @@ function App() {
               <div className="match-copy">
                 <div className="live-mark">
                   <Flame size={16} />
-                  <span>{topPick.label ?? "Tonight's Pick"}</span>
+                  <span>{topPick.label ?? "今日重点"}</span>
                 </div>
                 <h1>{topPick.match}</h1>
                 <p>{topPick.body}</p>
@@ -314,7 +399,7 @@ function App() {
               <div className="match-radar" aria-label="比赛雷达">
                 <div className="radar-core">
                   <span>{topPick.time ?? "03:00"}</span>
-                  <strong>BJT</strong>
+                  <strong>北京</strong>
                 </div>
                 {(topPick.metrics ?? fallbackPulse.topPick.metrics).map((metric) => (
                   <Metric key={metric.label} label={metric.label} value={metric.value} accent={metric.accent} />
@@ -325,7 +410,7 @@ function App() {
             <section className="cards-section" ref={cardsRef}>
               <div className="section-heading">
                 <div>
-                  <span>Daily Briefing</span>
+                  <span>每日简报</span>
                   <h2>今日情报卡</h2>
                   <small>{dailyPulse.meta?.subtitle}</small>
                 </div>
@@ -368,7 +453,7 @@ function App() {
               </div>
               <div className="confidence-pill">
                 <ShieldCheck size={16} />
-                来源置信 {selected.confidence}% · {selected.source}
+                来源置信 {selected.confidence}% · {displaySourceName(selected.source)}
               </div>
               {selected.url && (
                 <a className="source-link-button" href={selected.url} target="_blank" rel="noreferrer">
@@ -409,7 +494,7 @@ function App() {
             <section className="sources-panel" ref={sourcesRef}>
               <div className="panel-title">
                 <Star size={17} />
-                <span>Source confidence</span>
+                <span>来源可信度</span>
               </div>
               {sourceLinks.map((source, index) => (
                 <SourceMeter key={`${source.name}-${source.url}-${index}`} source={source} />

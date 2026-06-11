@@ -1,23 +1,23 @@
 {
   "version": 1,
-  "generatedAt": "2026-06-11T17:01:55.001Z",
+  "generatedAt": "2026-06-11T19:23:16.646Z",
   "generatedFor": "morning",
   "sourceMode": "rss",
   "meta": {
     "title": "PULSE 26 世界杯晨报",
-    "subtitle": "北京时间 2026/06/12 01:01 · 新闻源自动更新",
-    "status": "RSS fallback",
-    "summary": "今日内容来自公开新闻源自动汇总。配置 AI_PROVIDER 和 AI_API_KEY 后会升级为中文编辑判断版。"
+    "subtitle": "北京时间 2026/06/12 03:23 · 新闻源自动更新",
+    "status": "新闻源兜底",
+    "summary": "今日内容来自公开新闻源自动汇总。接入 DeepSeek 或 OpenRouter 后会升级为中文编辑判断版。"
   },
   "topPick": {
-    "label": "Today's Lead",
-    "match": "World Cup 2026: teams qualified, k",
+    "label": "今日重点",
+    "match": "赛程与对阵线索更新",
     "time": "08:20",
-    "body": "World Cup 2026: teams qualified, key players and fix",
+    "body": "ESPN 足球 带来了赛程、分组或具体对阵的新线索，会影响今天的观赛优先级。",
     "metrics": [
       {
         "label": "更新模式",
-        "value": "RSS",
+        "value": "新闻源",
         "accent": true
       },
       {
@@ -26,81 +26,81 @@
       },
       {
         "label": "来源置信",
-        "value": "92%"
+        "value": "88%"
       }
     ]
   },
   "pulseCards": [
     {
-      "id": "feed-0-world-cup-2026-teams-qualified-k",
+      "id": "feed-0-live-updates-mexico-take-early-l",
       "kind": "今日头条",
-      "title": "World Cup 2026: teams qualified, k",
-      "summary": "World Cup 2026: teams qualified, key players and fix",
-      "why": "Reuters 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "点开来源阅读原文；如果配置 AI_PROVIDER 和 AI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
-      "confidence": 92,
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxPQXhvRmJpN3k2aGxZTVl5LWpVOU9NRXdBTDdWNUVqaGFWYXl0QTQ2WVF5cUQ4aDJKVVh4WVRmV0NuWWtTbWMyeVJhN2tGeHlxUnRDX012OTJmd2s5bzFRM1RJWEhtc2VGbXU2QjZVNmNlVXExcVVwT0ZtX2t5U281cmR1YjZFY18xTmowZi1tOUdKclVHUmJ1ZjJNNzJ0RXl6TkdF?oc=5",
+      "title": "赛程与对阵线索更新",
+      "summary": "ESPN 足球 带来了赛程、分组或具体对阵的新线索，会影响今天的观赛优先级。",
+      "why": "ESPN 足球 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
+      "watch": "优先看东道主、强队首秀和小组关键场，普通信息可以等晚间简报再处理。",
+      "confidence": 88,
+      "source": "ESPN 足球",
+      "url": "https://www.espn.com/soccer/story/_/id/49003509/2026-fifa-world-cup-live-updates-mexico-vs-south-africa",
       "tone": "amber"
     },
     {
-      "id": "feed-1-how-are-the-fifa-world-rankings-",
+      "id": "feed-1-liverpool-s-endo-out-of-wc-retir",
       "kind": "新闻线索",
-      "title": "How are the Fifa world rankings de",
-      "summary": "BBC Sport's Ask Me Anything team explains how the me",
-      "why": "BBC Sport 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "点开来源阅读原文；如果配置 AI_PROVIDER 和 AI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
-      "confidence": 90,
-      "source": "BBC Sport",
-      "url": "https://www.bbc.com/sport/football/articles/crm0n2e9le8o?at_medium=RSS&at_campaign=rss",
+      "title": "伤病与名单出现新变化",
+      "summary": "ESPN 足球 更新了球员健康或名单调整信息，赛前阵容还需要继续确认。",
+      "why": "ESPN 足球 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
+      "watch": "重点看门将、中卫、后腰和边路位置是否临场换人，这些位置最容易改变比赛走势。",
+      "confidence": 88,
+      "source": "ESPN 足球",
+      "url": "https://www.espn.com/soccer/story/_/id/49032127/japan-captain-wataru-endo-world-cup-injury-announces-retirement",
       "tone": "green"
     },
     {
-      "id": "feed-2-united-states-at-the-fifa-world-",
+      "id": "feed-2-ranking-asia-s-contenders-which-",
       "kind": "赛前动态",
-      "title": "United States at the FIFA World Cu",
-      "summary": "United States at the FIFA World Cup 2026: News, Fixt",
-      "why": "Reuters 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "点开来源阅读原文；如果配置 AI_PROVIDER 和 AI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
-      "confidence": 92,
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE1XY3E4NVp4eG9lRVBtMWVZZ1NBYTdqQmxJQkNFXy1OekM1VHp0ckVUejQwaEJqbWJqNm9kRmVZTEFFelJFUDBhaGJYenZBRjJ6N3FnVTFJYXR5WU1XakdJZjVjQkNLaTRfWDVwalVMMA?oc=5",
+      "title": "参赛队阵容信息更新",
+      "summary": "ESPN 足球 发布了球队名单、关键球员或出线相关信息，适合放进今日观察池。",
+      "why": "ESPN 足球 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
+      "watch": "先确认核心球员是否稳定首发，再看替补深度和第二场轮换风险。",
+      "confidence": 88,
+      "source": "ESPN 足球",
+      "url": "https://www.espn.com/soccer/story/_/id/49025395/ranking-asias-contenders-which-team-go-furthest-world-cup",
       "tone": "steel"
     },
     {
-      "id": "feed-3-morocco-forced-into-two-injury-c",
+      "id": "feed-3-2026-world-cup-betting-preview-o",
       "kind": "赛程雷达",
-      "title": "Morocco forced into two injury cha",
-      "summary": "Morocco forced into two injury changes ahead of Worl",
-      "why": "Reuters 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "点开来源阅读原文；如果配置 AI_PROVIDER 和 AI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
-      "confidence": 92,
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNTVEzdFhIeVhybjhfcFJxd3lBSXY1LXVjMjBUdEI2VTZidFV1LUZPZExuYWk5bWUySEpTQklPNEc2VnRaTHNRRTdUb1NHRzd2RmNFRk1XSGJtQ0puM09RSmNhRlhOWXBka0RjT1JkbUd4dlRRdE4yZU9pOWh4a09iZE5mNjlVSE9nLWY0ZFVrM2dfdTdJNUNSSFM2YjFzd1BKNjFzS0xnNmYxdmxPdDdRdw?oc=5",
+      "title": "市场预期正在调整",
+      "summary": "ESPN 足球 的赔率或预测信息显示，外部市场对夺冠和单场走势有了新判断。",
+      "why": "ESPN 足球 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
+      "watch": "赔率只能当情绪温度计，不直接当结论；真正要看阵容、赛程密度和伤病。",
+      "confidence": 88,
+      "source": "ESPN 足球",
+      "url": "https://www.espn.com/espn/betting/story/_/id/48807078/fifa-world-cup-betting-preview-best-bets-picks-odds-props-futures-2026",
       "tone": "blue"
     },
     {
-      "id": "feed-4-south-korea-vs-czechia-world-cup",
+      "id": "feed-4-the-u-s-is-going-to-win-the-2026",
       "kind": "伤病观察",
-      "title": "South Korea vs Czechia: World Cup ",
-      "summary": "South Korea vs Czechia: World Cup group match – team",
-      "why": "Reuters 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "点开来源阅读原文；如果配置 AI_PROVIDER 和 AI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
-      "confidence": 92,
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxOaTh0eHdSSDVmVy1HdEpoRC04QngyakhTYkpqdHpwcTZWSm9IdDAwaVpTQnl5SHdqY08tOHZkcnZ5aHNUdHRmS3NZT0FNRG43VS1GZDNDbjFZbGFUbk1LeU5FQ2dweEpidHh3MlJSVzBOQW1DWndQaDYyMkJyRzVIS1hVcDBYWEVBbmx1TUR1dnBoT283SnpIcGFyV2k0TWlYVC1QSjNTTmZtUGpPT3NjY9IBtgFBVV95cUxPT1IwVWU2NXo3QmNlQmMtdHl6WURBb1ppam80TkViMFp6Z21Dc3JjM2VlNEV2WTEtczA3MEpETG5tMUN2TVhWd0dZQnYyNW9wVHJNYnV6NjR6U2J1VXpJSnhxSTFhbFpJTFNnT3gxQkpISnJuTlZWdDlnMUp5b3VkZVY4dkVHNHFCYVdNZk93Z1IxVHpZVEV5MzJnMThaQkJjN3MyVTBZZ21hWnlRbHdkY1VRQjlwdw?oc=5",
+      "title": "市场预期正在调整",
+      "summary": "ESPN 足球 的赔率或预测信息显示，外部市场对夺冠和单场走势有了新判断。",
+      "why": "ESPN 足球 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
+      "watch": "赔率只能当情绪温度计，不直接当结论；真正要看阵容、赛程密度和伤病。",
+      "confidence": 88,
+      "source": "ESPN 足球",
+      "url": "https://www.espn.com/soccer/story/_/id/49022498/13-stats-prove-usmnt-win-2026-world-cup-history-usa-champions",
       "tone": "green"
     },
     {
-      "id": "feed-5-germany-players-will-pay-for-600",
+      "id": "feed-5-world-cup-daily-live-finally-the",
       "kind": "今日暗线",
-      "title": "Germany players will pay for 600 f",
-      "summary": "Germany's players will pay for 600 of the country's ",
-      "why": "BBC Sport 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "点开来源阅读原文；如果配置 AI_PROVIDER 和 AI_API_KEY，系统会把这些候选源压缩成更像 Pulse 的中文判断。",
-      "confidence": 90,
-      "source": "BBC Sport",
-      "url": "https://www.bbc.com/sport/football/articles/c9v2nvm02llo?at_medium=RSS&at_campaign=rss",
+      "title": "暗线信息值得留意",
+      "summary": "ESPN 足球 发布了新的世界杯相关消息，已进入今日简报候选。",
+      "why": "ESPN 足球 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
+      "watch": "点开来源阅读原文；接入 DeepSeek 或 OpenRouter 后，系统会自动生成更具体的中文判断。",
+      "confidence": 88,
+      "source": "ESPN 足球",
+      "url": "https://www.espn.com/soccer/story/_/id/49012835/world-cup-daily-biggest-tournament-ever-begin-mexico-vs-sa",
       "tone": "amber"
     }
   ],
@@ -153,32 +153,32 @@
   ],
   "sourceLinks": [
     {
-      "name": "Reuters",
+      "name": "ESPN 足球",
       "type": "新闻源",
-      "confidence": 92,
-      "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxPQXhvRmJpN3k2aGxZTVl5LWpVOU9NRXdBTDdWNUVqaGFWYXl0QTQ2WVF5cUQ4aDJKVVh4WVRmV0NuWWtTbWMyeVJhN2tGeHlxUnRDX012OTJmd2s5bzFRM1RJWEhtc2VGbXU2QjZVNmNlVXExcVVwT0ZtX2t5U281cmR1YjZFY18xTmowZi1tOUdKclVHUmJ1ZjJNNzJ0RXl6TkdF?oc=5"
+      "confidence": 88,
+      "url": "https://www.espn.com/soccer/story/_/id/49003509/2026-fifa-world-cup-live-updates-mexico-vs-south-africa"
     },
     {
-      "name": "BBC Sport",
+      "name": "ESPN 足球",
       "type": "新闻源",
-      "confidence": 90,
-      "url": "https://www.bbc.com/sport/football/articles/crm0n2e9le8o?at_medium=RSS&at_campaign=rss"
+      "confidence": 88,
+      "url": "https://www.espn.com/soccer/story/_/id/49032127/japan-captain-wataru-endo-world-cup-injury-announces-retirement"
     },
     {
-      "name": "Reuters",
+      "name": "ESPN 足球",
       "type": "新闻源",
-      "confidence": 92,
-      "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE1XY3E4NVp4eG9lRVBtMWVZZ1NBYTdqQmxJQkNFXy1OekM1VHp0ckVUejQwaEJqbWJqNm9kRmVZTEFFelJFUDBhaGJYenZBRjJ6N3FnVTFJYXR5WU1XakdJZjVjQkNLaTRfWDVwalVMMA?oc=5"
+      "confidence": 88,
+      "url": "https://www.espn.com/soccer/story/_/id/49025395/ranking-asias-contenders-which-team-go-furthest-world-cup"
     },
     {
-      "name": "Reuters",
+      "name": "ESPN 足球",
       "type": "新闻源",
-      "confidence": 92,
-      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNTVEzdFhIeVhybjhfcFJxd3lBSXY1LXVjMjBUdEI2VTZidFV1LUZPZExuYWk5bWUySEpTQklPNEc2VnRaTHNRRTdUb1NHRzd2RmNFRk1XSGJtQ0puM09RSmNhRlhOWXBka0RjT1JkbUd4dlRRdE4yZU9pOWh4a09iZE5mNjlVSE9nLWY0ZFVrM2dfdTdJNUNSSFM2YjFzd1BKNjFzS0xnNmYxdmxPdDdRdw?oc=5"
+      "confidence": 88,
+      "url": "https://www.espn.com/espn/betting/story/_/id/48807078/fifa-world-cup-betting-preview-best-bets-picks-odds-props-futures-2026"
     }
   ],
   "notification": {
     "title": "PULSE 26 世界杯晨报",
-    "message": "World Cup 2026: teams qualified, k\n\n点开查看完整卡片：https://fangzheng17.github.io/pulse-26/"
+    "message": "赛程与对阵线索更新\n\n点开查看完整卡片：https://fangzheng17.github.io/pulse-26/"
   }
 }
