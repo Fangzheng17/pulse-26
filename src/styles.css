@@ -577,19 +577,28 @@ h1 {
 }
 
 .card-media {
-  height: 94px;
+  height: 128px;
   margin: 0 -16px 2px;
-  background-size: cover;
-  background-position: center;
   border-radius: 8px 8px 0 0;
   position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #e3f2ea, #fff8d9);
+}
+
+.card-media img,
+.briefing-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
 }
 
 .card-media::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(8, 59, 36, 0.02), rgba(8, 59, 36, 0.2));
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(8, 59, 36, 0), rgba(8, 59, 36, 0.08));
 }
 
 .pulse-card:hover,
@@ -687,11 +696,11 @@ h1 {
 }
 
 .briefing-image {
-  height: 148px;
+  height: 172px;
   margin: -4px 0 16px;
   border-radius: 8px;
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, #e3f2ea, #fff8d9);
   border: 1px solid rgba(8, 122, 67, 0.12);
 }
 
@@ -1094,6 +1103,15 @@ h1 {
   .pulse-card {
     min-height: 188px;
     padding: 15px;
+  }
+
+  .pulse-card.has-image {
+    padding-top: 0;
+  }
+
+  .card-media {
+    height: 148px;
+    margin: 0 -15px 2px;
   }
 
   .briefing-panel,

@@ -49,6 +49,8 @@ const providerLabelMap = {
   openai: "OpenAI 今日简报"
 };
 
+const cardImageFallback = "https://digitalhub.fifa.com/transform/6744d743-cde9-49a8-83f8-a3c0b070cf9e/FIFA-Rewards-FWC26_Collection-Header?io=transform:fill,width:900,height:506";
+
 const mobileTabs = [
   { label: "首页", target: "今日", icon: Home },
   { label: "赛程", target: "赛程", icon: CalendarClock },
@@ -82,6 +84,18 @@ function displaySourceName(source = "") {
 
 function cssUrl(value) {
   return `url("${String(value).replaceAll("\"", "%22")}")`;
+}
+
+function normalizeImageSrc(value = "") {
+  const text = String(value);
+  if (!/^https:\/\/digitalhub\.fifa\.com\//i.test(text)) return text;
+  return `${text.split("?")[0]}?io=transform:fill,width:900,height:506`;
+}
+
+function handleImageError(event) {
+  if (event.currentTarget.dataset.fallbackApplied === "true") return;
+  event.currentTarget.dataset.fallbackApplied = "true";
+  event.currentTarget.src = cardImageFallback;
 }
 
 function hasLatinText(value = "") {
@@ -198,7 +212,9 @@ function PulseCard({ card, active, saved, feedback, onSelect, onSave, onDown }) 
   return (
     <article className={`pulse-card tone-${card.tone} ${active ? "selected" : ""} ${card.image ? "has-image" : ""}`} onClick={onSelect}>
       {card.image && (
-        <div className="card-media" style={{ backgroundImage: cssUrl(card.image) }} aria-label={card.imageAlt || card.title} />
+        <div className="card-media">
+          <img src={normalizeImageSrc(card.image)} alt={card.imageAlt || card.title} loading="eager" decoding="async" referrerPolicy="no-referrer" onError={handleImageError} />
+        </div>
       )}
       <div className="card-topline">
         <span>{card.kind}</span>
@@ -264,7 +280,7 @@ function App() {
   const sourceLinks = dailyPulse.sourceLinks?.length ? dailyPulse.sourceLinks : fallbackPulse.sourceLinks;
   const topPick = dailyPulse.topPick ?? fallbackPulse.topPick;
   const selected = pulseCards.find((card) => card.id === selectedId) ?? pulseCards[0];
-  const heroImage = topPick.image || selected?.image || pulseCards.find((card) => card.image)?.image || stadiumNight;
+  const heroImage = normalizeImageSrc(topPick.image || selected?.image || pulseCards.find((card) => card.image)?.image || stadiumNight);
   const countdown = useMemo(getCountdown, []);
   const beijingTime = useMemo(formatBeijingTime, []);
 
@@ -510,7 +526,9 @@ function App() {
           <aside className="detail-column">
             <section className="briefing-panel" ref={briefingRef}>
               {selected.image && (
-                <div className="briefing-image" style={{ backgroundImage: cssUrl(selected.image) }} aria-label={selected.imageAlt || selected.title} />
+                <div className="briefing-image">
+                  <img src={normalizeImageSrc(selected.image)} alt={selected.imageAlt || selected.title} loading="eager" decoding="async" referrerPolicy="no-referrer" onError={handleImageError} />
+                </div>
               )}
               <div className="panel-title">
                 <Sparkles size={17} />

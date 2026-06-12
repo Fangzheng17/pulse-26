@@ -1,3 +1,10 @@
+const fallbackImages = [
+  "https://digitalhub.fifa.com/transform/6744d743-cde9-49a8-83f8-a3c0b070cf9e/FIFA-Rewards-FWC26_Collection-Header?io=transform:fill,width:900,height:506",
+  "https://digitalhub.fifa.com/transform/eb9b5c03-9e8f-41ab-92c8-370d012b7c87/FIFA-World-Cup-stadium-capacities-confirmed?io=transform:fill,width:900,height:506",
+  "https://digitalhub.fifa.com/transform/2cfdd8a8-fd7e-4c55-b387-5741fe4d9623/Referees-Training-Session-FIFA-World-Cup-2026?io=transform:fill,width:900,height:506",
+  "https://digitalhub.fifa.com/transform/2d8cead5-a7f5-44d5-b216-18bae26341f8/KIPP-Miami-Public-Schools-Football-Pitch-Refurbishment-Ribbon-Cutting-Ceremony?io=transform:fill,width:900,height:506"
+];
+
 export const sourceLinks = [
   {
     name: "FIFA 赛程",
@@ -35,6 +42,8 @@ export const pulseCards = [
     watch: "墨西哥边路推进后的二点保护，以及南非断球后的第一脚向前。",
     confidence: 94,
     source: "FIFA 赛程",
+    image: fallbackImages[0],
+    imageAlt: "FIFA World Cup 2026 官方图",
     tone: "amber"
   },
   {
@@ -46,6 +55,8 @@ export const pulseCards = [
     watch: "如果墨西哥前15分钟抢不下球权，比赛会变成耐心测试。",
     confidence: 86,
     source: "FIFA 开幕报道",
+    image: fallbackImages[1],
+    imageAlt: "FIFA World Cup 2026 球场官方图",
     tone: "green"
   },
   {
@@ -57,6 +68,8 @@ export const pulseCards = [
     watch: "如果你只看球，建议从开球前 20 分钟进入；如果看仪式，提前 60 分钟。",
     confidence: 96,
     source: "FIFA 媒体发布",
+    image: fallbackImages[2],
+    imageAlt: "FIFA World Cup 2026 训练官方图",
     tone: "steel"
   },
   {
@@ -68,6 +81,8 @@ export const pulseCards = [
     watch: "第一轮爆冷未必立刻改变出线，但会改变第二轮的风险偏好。",
     confidence: 92,
     source: "FIFA 赛程",
+    image: fallbackImages[3],
+    imageAlt: "FIFA World Cup 2026 社区球场官方图",
     tone: "blue"
   },
   {
@@ -79,6 +94,8 @@ export const pulseCards = [
     watch: "第一周优先看东道主、夺冠热门首秀、亚洲球队首战。",
     confidence: 89,
     source: "PULSE 编辑策略",
+    image: fallbackImages[0],
+    imageAlt: "FIFA World Cup 2026 官方图",
     tone: "green"
   },
   {
@@ -90,6 +107,8 @@ export const pulseCards = [
     watch: "重点球队的门将、后腰、中卫组合，往往比锋线名字更能决定比赛走向。",
     confidence: 90,
     source: "路透社 / 美联社 / 球队官方",
+    image: fallbackImages[1],
+    imageAlt: "FIFA World Cup 2026 球场官方图",
     tone: "amber"
   }
 ];
@@ -147,6 +166,7 @@ export const fallbackPulse = {
     match: "墨西哥 vs 南非",
     time: "03:00",
     body: "开幕战，北京时间 6 月 12 日 03:00。我的建议是看上半场：主场情绪、前场压迫和反击第一脚会很快给出这届杯赛的第一条线索。",
+    image: fallbackImages[0],
     metrics: [
       { label: "熬夜指数", value: "8.6", accent: true },
       { label: "冷门热度", value: "中" },

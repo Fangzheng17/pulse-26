@@ -9,7 +9,7 @@ const aiModel = process.env.AI_MODEL?.trim() || process.env.OPENAI_MODEL?.trim()
 const aiBaseUrl = (process.env.AI_BASE_URL?.trim() || defaultBaseUrl(aiProvider)).replace(/\/$/, "");
 const fifaSearchApi = "https://cxm-api.fifa.com/fifacxmsearch/api/results";
 const fifaSearchKey = "2kD9zRYRT7xN6kSGs6EoHcvSyKOyK0B4YaKTf1Ygeaw8PM6bgfR6SQ==";
-const officialFifaImage = "https://digitalhub.fifa.com/transform/6744d743-cde9-49a8-83f8-a3c0b070cf9e/FIFA-Rewards-FWC26_Collection-Header";
+const officialFifaImage = normalizeFifaImageUrl("https://digitalhub.fifa.com/transform/6744d743-cde9-49a8-83f8-a3c0b070cf9e/FIFA-Rewards-FWC26_Collection-Header");
 
 const fifaSearchQueries = [
   "FIFA World Cup 2026",
@@ -233,7 +233,7 @@ function normalizeFifaHit(hit, query, clientType, index) {
   const source = hit?._source ?? {};
   const publicUrl = normalizeFifaUrl(source.url);
   if (!source.title || !publicUrl) return null;
-  const image = isFifaImage(source.image?.src) ? source.image.src : officialFifaImage;
+  const image = normalizeFifaImageUrl(source.image?.src) || officialFifaImage;
   const summary = cleanSummary(source.description) || cleanSummary(source.image?.alt) || "FIFA 官方更新了 2026 世界杯相关消息。";
   const isMainSite = /^https:\/\/www\.fifa\.com\/en\//i.test(publicUrl);
   return {
@@ -291,7 +291,7 @@ function parseFeed(xml, feed) {
     const source = itemSource || cleanSourceName(feed.source);
     const sameSource = !itemSource || source === cleanSourceName(feed.source) || /谷歌新闻|中文体育新闻/.test(feed.source);
     const feedImage = extractFeedImage(item);
-    const image = isFifaImage(feedImage) ? feedImage : (/FIFA/.test(source) ? officialFifaImage : "");
+    const image = normalizeFifaImageUrl(feedImage) || (/FIFA/.test(source) ? officialFifaImage : "");
     return {
       id: `${feed.source}-${index}-${title}`.slice(0, 120),
       source,
@@ -344,6 +344,16 @@ function cleanSourceName(source = "") {
 
 function isFifaImage(url = "") {
   return /^https:\/\/digitalhub\.fifa\.com\//i.test(String(url));
+}
+
+function normalizeFifaImageUrl(url = "", width = 900, height = 506) {
+  if (!isFifaImage(url)) return "";
+  const base = String(url).split("?")[0];
+  return `${base}?io=transform:fill,width:${width},height:${height}`;
+}
+
+function sameFifaAsset(left = "", right = "") {
+  return isFifaImage(left) && isFifaImage(right) && String(left).split("?")[0] === String(right).split("?")[0];
 }
 
 function hasScoreSignal(text) {
@@ -415,7 +425,8 @@ function fallbackCards(articles) {
   ];
   const officialImagePool = usable
     .map((article) => article.image)
-    .filter((image) => isFifaImage(image) && image !== officialFifaImage);
+    .map((image) => normalizeFifaImageUrl(image))
+    .filter((image) => image && !sameFifaAsset(image, officialFifaImage));
   return usable.slice(0, 6).map((article, index) => {
     const localized = localizeArticle(article, index);
     const image = pickOfficialImage(article, officialImagePool, index);
@@ -437,7 +448,8 @@ function fallbackCards(articles) {
 }
 
 function pickOfficialImage(article, imagePool, index) {
-  if (isFifaImage(article.image) && article.image !== officialFifaImage) return article.image;
+  const articleImage = normalizeFifaImageUrl(article.image);
+  if (articleImage && !sameFifaAsset(articleImage, officialFifaImage)) return articleImage;
   if (imagePool.length) return imagePool[index % imagePool.length];
   return officialFifaImage;
 }
@@ -696,7 +708,7 @@ function buildPulsePayload(cards, articles, sourceMode, aiPayload = {}) {
     type: aiMode ? "AI候选源" : "新闻源",
     confidence: article.confidence ?? 82,
     url: article.url,
-    image: article.image || officialFifaImage
+    image: normalizeFifaImageUrl(article.image) || officialFifaImage
   }));
 
   return {
@@ -715,7 +727,7 @@ function buildPulsePayload(cards, articles, sourceMode, aiPayload = {}) {
       match: topStory?.title ?? "今日最重要的比分新闻",
       time: kind === "night" ? "21:30" : "08:20",
       body: topStory?.summary || "今日世界杯比分、赛果和战报候选新闻已经更新，点开卡片查看来源和重点。",
-      image: topStory?.image || officialFifaImage,
+      image: normalizeFifaImageUrl(topStory?.image) || officialFifaImage,
       metrics: [
         { label: "更新模式", value: aiMode ? "智能生成" : "新闻源", accent: true },
         { label: "候选新闻", value: String(articles.length) },
@@ -742,17 +754,49 @@ function providerDisplayName(provider) {
   return names[provider] ?? provider;
 }
 
+function buildImagePool(articles) {
+  const seen = new Set();
+  return articles
+    .map((article) => normalizeFifaImageUrl(article.image))
+    .filter((image) => image && !sameFifaAsset(image, officialFifaImage))
+    .filter((image) => {
+      const key = image.split("?")[0];
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+}
+
+function findArticleForCard(card, articles, index) {
+  const byUrl = articles.find((article) => article.url && card.url && article.url === card.url);
+  if (byUrl) return byUrl;
+  return articles[index];
+}
+
+function selectAiCardImage(card, articles, imagePool, index) {
+  const cardImage = normalizeFifaImageUrl(card.image);
+  if (cardImage && !sameFifaAsset(cardImage, officialFifaImage)) return cardImage;
+
+  const matchedArticle = findArticleForCard(card, articles, index);
+  const articleImage = normalizeFifaImageUrl(matchedArticle?.image);
+  if (articleImage && !sameFifaAsset(articleImage, officialFifaImage)) return articleImage;
+
+  if (imagePool.length) return imagePool[index % imagePool.length];
+  return officialFifaImage;
+}
+
 function normalizeAiPayload(aiPayload, articles) {
   const cards = Array.isArray(aiPayload.pulseCards) && aiPayload.pulseCards.length
     ? aiPayload.pulseCards
     : fallbackCards(articles);
-  const firstImage = articles.find((article) => isFifaImage(article.image))?.image || officialFifaImage;
+  const imagePool = buildImagePool(articles);
+  const firstImage = imagePool[0] || officialFifaImage;
   return {
     ...aiPayload,
     topPick: aiPayload.topPick
       ? {
           ...aiPayload.topPick,
-          image: isFifaImage(aiPayload.topPick.image) ? aiPayload.topPick.image : firstImage
+          image: normalizeFifaImageUrl(aiPayload.topPick.image) || firstImage
         }
       : aiPayload.topPick,
     pulseCards: cards.slice(0, 8).map((card, index) => ({
@@ -765,7 +809,7 @@ function normalizeAiPayload(aiPayload, articles) {
       confidence: clamp(Number(card.confidence) || 86, 50, 99),
       source: card.source || "公开新闻源",
       url: card.url || articles[index]?.url || pulseUrl,
-      image: isFifaImage(card.image) ? card.image : articles[index]?.image || officialFifaImage,
+      image: selectAiCardImage(card, articles, imagePool, index),
       imageAlt: card.imageAlt || articles[index]?.imageAlt || card.title || "FIFA World Cup 2026",
       tone: ["amber", "green", "steel", "blue"].includes(card.tone) ? card.tone : ["amber", "green", "steel", "blue"][index % 4]
     }))
