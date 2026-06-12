@@ -1,120 +1,136 @@
 {
   "version": 1,
-  "generatedAt": "2026-06-11T23:04:37.456Z",
+  "generatedAt": "2026-06-12T05:40:57.987Z",
   "generatedFor": "morning",
-  "sourceMode": "rss",
+  "sourceMode": "deepseek",
   "meta": {
-    "title": "PULSE 26 世界杯晨报",
-    "subtitle": "北京时间 2026/06/12 07:04 · 新闻源自动更新",
-    "status": "新闻源兜底",
-    "summary": "今日内容来自公开新闻源自动汇总。接入 DeepSeek 或 OpenRouter 后会升级为中文编辑判断版。"
+    "title": "2026 世界杯 PULSE 26",
+    "subtitle": "北京时间 2026/06/12 13:40",
+    "status": "DeepSeek 生成",
+    "summary": "墨西哥 2-0 南非，揭幕战三张红牌引爆阿兹特克；今日赛程与球队动态一览。"
   },
   "topPick": {
     "label": "比分头条",
-    "match": "墨西哥 vs 南非赛果更新",
-    "time": "08:20",
-    "body": "ESPN 足球 更新了墨西哥与南非揭幕战相关赛果，是今天首页最该先看的比分新闻。",
-    "image": "https://digitalhub.fifa.com/transform/eb9b5c03-9e8f-41ab-92c8-370d012b7c87/FIFA-World-Cup-stadium-capacities-confirmed",
+    "match": "墨西哥 2-0 南非",
+    "time": "05:41",
+    "body": "2026 世界杯揭幕战在墨西哥城阿兹特克体育场打响，东道主墨西哥凭借 Julián Quiñones 和 Raúl Jiménez 的进球，2-0 击败南非。比赛中出现三张红牌，南非两人被罚下，墨西哥一人离场，场面火爆。",
+    "image": "https://digitalhub.fifa.com/transform/6744d743-cde9-49a8-83f8-a3c0b070cf9e/FIFA-Rewards-FWC26_Collection-Header?io=transform:fill,width:900,height:506",
     "metrics": [
       {
-        "label": "更新模式",
-        "value": "新闻源",
+        "label": "进球",
+        "value": "2-0",
         "accent": true
       },
       {
-        "label": "候选新闻",
-        "value": "28"
+        "label": "红牌",
+        "value": "3",
+        "accent": false
       },
       {
-        "label": "来源置信",
-        "value": "96%"
+        "label": "控球率",
+        "value": "58% vs 42%",
+        "accent": false
       }
     ]
   },
   "pulseCards": [
     {
-      "id": "feed-0-2026-world-cup-recap-mexico-kick",
-      "kind": "今日头条",
-      "title": "墨西哥 vs 南非赛果更新",
-      "summary": "ESPN 足球 更新了墨西哥与南非揭幕战相关赛果，是今天首页最该先看的比分新闻。",
-      "why": "ESPN 足球 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "先看进球时间、晋级影响和小组排名变化，再决定是否回看集锦。",
-      "confidence": 74,
+      "id": "mexico-opener",
+      "kind": "战报",
+      "title": "墨西哥 2-0 南非，揭幕战三红",
+      "summary": "东道主墨西哥在阿兹特克球场 2-0 击败南非，Julián Quiñones 打入本届世界杯首球，Raúl Jiménez 锁定胜局。比",
+      "why": "世界杯揭幕战历来备受关注，本场不仅产生首球，还出现罕见的三张红牌，极具话题性。",
+      "watch": "关注墨西哥后续小组赛表现，以及南非在少打两人情况下的战术调整。",
+      "confidence": 90,
       "source": "ESPN 足球",
       "url": "https://www.espn.com/soccer/story/_/id/49003509/2026-fifa-world-cup-live-updates-mexico-vs-south-africa",
-      "image": "https://digitalhub.fifa.com/transform/eb9b5c03-9e8f-41ab-92c8-370d012b7c87/FIFA-World-Cup-stadium-capacities-confirmed",
-      "imageAlt": "2026 World Cup recap: Mexico kicks off World Cup w...",
+      "image": "https://digitalhub.fifa.com/transform/2cfdd8a8-fd7e-4c55-b387-5741fe4d9623/Referees-Training-Session-FIFA-World-Cup-2026?io=transform:fill,width:900,height:506",
+      "imageAlt": "墨西哥 vs 南非 揭幕战",
       "tone": "amber"
     },
     {
-      "id": "feed-1-fifa-world-cup-2026-set-to-break",
-      "kind": "新闻线索",
-      "title": "赛程与对阵线索更新",
-      "summary": "FIFA 官方 带来了赛程、分组或具体对阵的新线索，会影响今天的观赛优先级。",
-      "why": "FIFA 官方 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "优先看东道主、强队首秀和小组关键场，普通信息可以等晚间简报再处理。",
-      "confidence": 96,
-      "source": "FIFA 官方",
-      "url": "https://www.inside.fifa.com/news/fifa-world-cup-stadium-capacities-confirmed",
-      "image": "https://digitalhub.fifa.com/transform/eb9b5c03-9e8f-41ab-92c8-370d012b7c87/FIFA-World-Cup-stadium-capacities-confirmed",
-      "imageAlt": "FIFA World Cup™ stadium capacities confirmed",
+      "id": "quinones-first-goal",
+      "kind": "看点",
+      "title": "Julián Quiñones 打入世界杯首球",
+      "summary": "墨西哥前锋 Julián Quiñones 在揭幕战中用一记穿裆射门攻破南非球门，成为 2026 世界杯首位进球者。",
+      "why": "首球创造者历来是世界杯经典瞬间，Quiñones 的穿裆破门极具观赏性，且他来自沙特联赛，引发关注。",
+      "watch": "Quiñones 能否延续状态，成为墨西哥进攻核心。",
+      "confidence": 90,
+      "source": "BBC 体育",
+      "url": "https://www.bbc.com/sport/football/videos/cqx184lqywwo",
+      "image": "https://digitalhub.fifa.com/transform/2d8cead5-a7f5-44d5-b216-18bae26341f8/KIPP-Miami-Public-Schools-Football-Pitch-Refurbishment-Ribbon-Cutting-Ceremony?io=transform:fill,width:900,height:506",
+      "imageAlt": "Julián Quiñones 庆祝进球",
       "tone": "green"
     },
     {
-      "id": "feed-2-fifa-president-welcomes-team-one",
-      "kind": "赛前动态",
-      "title": "赛程与对阵线索更新",
-      "summary": "FIFA 官方 带来了赛程、分组或具体对阵的新线索，会影响今天的观赛优先级。",
-      "why": "FIFA 官方 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "优先看东道主、强队首秀和小组关键场，普通信息可以等晚间简报再处理。",
-      "confidence": 96,
-      "source": "FIFA 官方",
-      "url": "https://www.inside.fifa.com/news/fifa-president-welcomes-team-one-at-training-camp-in-miami",
-      "image": "https://digitalhub.fifa.com/transform/2cfdd8a8-fd7e-4c55-b387-5741fe4d9623/Referees-Training-Session-FIFA-World-Cup-2026",
-      "imageAlt": "MIAMI, FLORIDA - JUNE 6 A group picture during a referee training session at Miami DADE College on June 6, 2026 in Miami, Florida. (Photo by Eva Marie Uzcategui - FIFA/FIFA via Getty Images)",
-      "tone": "steel"
+      "id": "three-red-cards",
+      "kind": "事件",
+      "title": "揭幕战三张红牌创纪录",
+      "summary": "墨西哥 vs 南非的比赛中，主裁判共出示三张红牌，南非两人被罚下，墨西哥一人离场，创下世界杯揭幕战红牌纪录。",
+      "why": "红牌数量罕见，直接影响比赛走势，也引发关于裁判尺度和球员纪律的讨论。",
+      "watch": "后续比赛裁判执法尺度是否收紧，以及南非的停赛影响。",
+      "confidence": 90,
+      "source": "BBC 体育",
+      "url": "https://www.bbc.com/sport/football/videos/cx2dyr3e1zro",
+      "image": "https://digitalhub.fifa.com/transform/9ef0f8cb-0e1d-4471-bc13-6a090ecc4d75/FIFA-President-Gianni-Infantino-Attends-Mass-at-St-Patrick-s-Old-Cathedral?io=transform:fill,width:900,height:506",
+      "imageAlt": "红牌瞬间",
+      "tone": "amber"
     },
     {
-      "id": "feed-3-exactly-what-fifa-stands-for-fif",
-      "kind": "赛程雷达",
-      "title": "赛程与对阵线索更新",
-      "summary": "FIFA 官方 带来了赛程、分组或具体对阵的新线索，会影响今天的观赛优先级。",
-      "why": "FIFA 官方 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "优先看东道主、强队首秀和小组关键场，普通信息可以等晚间简报再处理。",
-      "confidence": 96,
+      "id": "sheinbaum-celebration",
+      "kind": "场外",
+      "title": "墨西哥总统与球迷共庆首球",
+      "summary": "墨西哥总统 Sheinbaum 在阿兹特克球场与球迷一同庆祝世界杯首球，现场气氛热烈。",
+      "why": "东道主首球具有国家象征意义，总统亲临助阵，体现足球对墨西哥的凝聚力。",
+      "watch": "后续东道主比赛能否延续主场优势。",
+      "confidence": 90,
+      "source": "路透社",
+      "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE8tM2VKYXVPMFVTVVN6QnlObG9ZRDV1aGVuaXBUVUNfMERPbnpuQUk0cGNOc3J4YmFUQjVOczF6dkg5eHBUVXotOWNwSXZtdFZ3Qjl5U3RRcHNRdzJBUlVoRU1fSEkxbGs?oc=5",
+      "image": "https://digitalhub.fifa.com/transform/eb9b5c03-9e8f-41ab-92c8-370d012b7c87/FIFA-World-Cup-stadium-capacities-confirmed?io=transform:fill,width:900,height:506",
+      "imageAlt": "Sheinbaum 与球迷庆祝",
+      "tone": "green"
+    },
+    {
+      "id": "spain-merino",
+      "kind": "前瞻",
+      "title": "梅里诺：西班牙能击败任何对手",
+      "summary": "西班牙中场米克尔·梅里诺在赛前采访中表示，球队状态正佳，有信心在本届世界杯击败任何对手。",
+      "why": "西班牙是夺冠热门之一，梅里诺的言论反映球队自信，也预示其小组赛可能强势表现。",
+      "watch": "西班牙首战对手及战术部署。",
+      "confidence": 90,
       "source": "FIFA 官方",
-      "url": "https://www.inside.fifa.com/news/refurbished-community-football-pitch-miami",
-      "image": "https://digitalhub.fifa.com/transform/2d8cead5-a7f5-44d5-b216-18bae26341f8/KIPP-Miami-Public-Schools-Football-Pitch-Refurbishment-Ribbon-Cutting-Ceremony",
-      "imageAlt": "MIAMI, FLORIDA - JUNE 3: The ribbon cutting ceremony of a football pitch refurbishment on June 3, 2026 in Miami, Florida. (Photo by Eva Marie Uzcategui - FIFA/FIFA via Getty Images)",
+      "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE96Q2NQeE55SGVzMFVqSjdoLU1YTGNWX25UNFUzUUZwSGFmTmtlYWt0NmE2Q0NnQUlNbUltVjNLc0piQVJvNkZEUHRqZnhxdF82OWQwWXp6Z040RzE5eXFtTFAyUmpCd3BlT2ZGUVd3?oc=5",
+      "image": "https://digitalhub.fifa.com/transform/655707d7-2333-4df1-a6b7-976b55d7ee37/Match-colour-designations-confirmed-for-all-72-FIFA-World-Cup-2026-group-stage-fixtures?io=transform:fill,width:900,height:506",
+      "imageAlt": "米克尔·梅里诺",
       "tone": "blue"
     },
     {
-      "id": "feed-4-gianni-infantino-celebrates-ital",
-      "kind": "伤病观察",
-      "title": "场外热度继续升温",
-      "summary": "FIFA 官方 关注了球迷、票务、开幕式或转播层面的变化，说明赛事关注度正在升高。",
-      "why": "FIFA 官方 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "这类信息主要影响观看体验和传播热度，比赛判断仍以赛前阵容为准。",
-      "confidence": 96,
-      "source": "FIFA 官方",
-      "url": "https://www.inside.fifa.com/news/gianni-infantino-italian-heritage-footballs-influence-new-york-city-event",
-      "image": "https://digitalhub.fifa.com/transform/9ef0f8cb-0e1d-4471-bc13-6a090ecc4d75/FIFA-President-Gianni-Infantino-Attends-Mass-at-St-Patrick-s-Old-Cathedral",
-      "imageAlt": "NEW YORK, NEW YORK - JUNE 7: FIFA President Gianni Infantino attends mass at St. Patrick's Cathedral on June 7, 2026 in New York City. (Photo by Ira L. Black - FIFA/FIFA via Getty Images)",
-      "tone": "green"
-    },
-    {
-      "id": "feed-5-murat-yakin-we-can-beat-the-bigg",
-      "kind": "今日暗线",
-      "title": "今日赛果新闻更新",
-      "summary": "FIFA 官方 更新了今日赛果或比分动态，适合放在首页头条。",
-      "why": "FIFA 官方 的这条更新进入今日候选池。它可能影响观赛选择、赛前判断或后续卡片排序。",
-      "watch": "先看进球时间、晋级影响和小组排名变化，再决定是否回看集锦。",
-      "confidence": 96,
+      "id": "switzerland-yakin",
+      "kind": "前瞻",
+      "title": "雅金：瑞士能击败最强球队",
+      "summary": "瑞士主帅穆拉特·雅金在赛前表示，球队有能力击败任何顶级强队，并已做好充分准备。",
+      "why": "瑞士近年来在大赛中屡有爆冷表现，雅金的言论显示球队信心，可能成为黑马。",
+      "watch": "瑞士首战对手及战术执行。",
+      "confidence": 90,
       "source": "FIFA 官方",
       "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQNlQ3YjJfdGxLQkNzRld3cFRsVnhOeGtKRWp0ZTgyYVRoOHRwUXF4a2J5bmttY0tWX2tKc3hwMWNObXVnQ093clJjRC1CWGJWQnNndXdpMlBHQjZMTHNvcTJiMldmSXA2WWpwWl9lQXBYbTdBSkh0R3VkNE16UDZpOHhvaDNNcXdyMjN5NXlkek1EZ296VkpMV0dBMFZjaGdmRVpYVzF5QkFPLTJ0Q2dScFdB?oc=5",
-      "image": "https://digitalhub.fifa.com/transform/eb9b5c03-9e8f-41ab-92c8-370d012b7c87/FIFA-World-Cup-stadium-capacities-confirmed",
-      "imageAlt": "Murat Yakin: We can beat the biggest teams",
-      "tone": "amber"
+      "image": "https://digitalhub.fifa.com/transform/538da51b-ae27-4d6f-9fa8-93d24a0ef1f3/Tournament-Operations-Center-Tour?io=transform:fill,width:900,height:506",
+      "imageAlt": "穆拉特·雅金",
+      "tone": "steel"
+    },
+    {
+      "id": "schedule-guide",
+      "kind": "指南",
+      "title": "2026 世界杯完整观赛指南",
+      "summary": "洛杉矶时报发布 2026 世界杯完整指南，包括电视转播表、球员关注、赛果和积分榜。",
+      "why": "为球迷提供一站式观赛信息，涵盖所有比赛时间和看点，实用性强。",
+      "watch": "每日更新赛程和积分变化。",
+      "confidence": 90,
+      "source": "Los Angeles Times",
+      "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPNkNZS1NkUjVEQktjc2JsN0V0Z2k4bElzUVJNY3NLVzN6dC1UdnkzZEl0TEs4cld4djBDLTFVTXV2alVFaTRfWDZqUjZfMGZNNHdJNzdqZjhfWWxqVzNlQVNCNDBucWJIdlc1ajRMeWY5anVWSnVybDBsdmwtal82OEJTdWhuQm4zNWxzWmFoX0NoWWlUdmFrVk5peWExNGE4U2hBZjZoSHZfcU1VV0w1TEotVQ?oc=5",
+      "image": "https://digitalhub.fifa.com/transform/2cfdd8a8-fd7e-4c55-b387-5741fe4d9623/Referees-Training-Session-FIFA-World-Cup-2026?io=transform:fill,width:900,height:506",
+      "imageAlt": "世界杯观赛指南",
+      "tone": "steel"
     }
   ],
   "matchTimeline": [
@@ -167,49 +183,49 @@
   "sourceLinks": [
     {
       "name": "ESPN 足球",
-      "type": "新闻源",
-      "confidence": 74,
+      "type": "AI候选源",
+      "confidence": 90,
       "url": "https://www.espn.com/soccer/story/_/id/49003509/2026-fifa-world-cup-live-updates-mexico-vs-south-africa",
-      "image": "https://digitalhub.fifa.com/transform/eb9b5c03-9e8f-41ab-92c8-370d012b7c87/FIFA-World-Cup-stadium-capacities-confirmed"
+      "image": "https://digitalhub.fifa.com/transform/2cfdd8a8-fd7e-4c55-b387-5741fe4d9623/Referees-Training-Session-FIFA-World-Cup-2026?io=transform:fill,width:900,height:506"
+    },
+    {
+      "name": "BBC 体育",
+      "type": "AI候选源",
+      "confidence": 90,
+      "url": "https://www.bbc.com/sport/football/videos/cqx184lqywwo",
+      "image": "https://digitalhub.fifa.com/transform/2d8cead5-a7f5-44d5-b216-18bae26341f8/KIPP-Miami-Public-Schools-Football-Pitch-Refurbishment-Ribbon-Cutting-Ceremony?io=transform:fill,width:900,height:506"
+    },
+    {
+      "name": "BBC 体育",
+      "type": "AI候选源",
+      "confidence": 90,
+      "url": "https://www.bbc.com/sport/football/videos/cx2dyr3e1zro",
+      "image": "https://digitalhub.fifa.com/transform/9ef0f8cb-0e1d-4471-bc13-6a090ecc4d75/FIFA-President-Gianni-Infantino-Attends-Mass-at-St-Patrick-s-Old-Cathedral?io=transform:fill,width:900,height:506"
+    },
+    {
+      "name": "路透社",
+      "type": "AI候选源",
+      "confidence": 90,
+      "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE8tM2VKYXVPMFVTVVN6QnlObG9ZRDV1aGVuaXBUVUNfMERPbnpuQUk0cGNOc3J4YmFUQjVOczF6dkg5eHBUVXotOWNwSXZtdFZ3Qjl5U3RRcHNRdzJBUlVoRU1fSEkxbGs?oc=5",
+      "image": "https://digitalhub.fifa.com/transform/eb9b5c03-9e8f-41ab-92c8-370d012b7c87/FIFA-World-Cup-stadium-capacities-confirmed?io=transform:fill,width:900,height:506"
     },
     {
       "name": "FIFA 官方",
-      "type": "新闻源",
-      "confidence": 96,
-      "url": "https://www.inside.fifa.com/news/fifa-world-cup-stadium-capacities-confirmed",
-      "image": "https://digitalhub.fifa.com/transform/eb9b5c03-9e8f-41ab-92c8-370d012b7c87/FIFA-World-Cup-stadium-capacities-confirmed"
+      "type": "AI候选源",
+      "confidence": 90,
+      "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE96Q2NQeE55SGVzMFVqSjdoLU1YTGNWX25UNFUzUUZwSGFmTmtlYWt0NmE2Q0NnQUlNbUltVjNLc0piQVJvNkZEUHRqZnhxdF82OWQwWXp6Z040RzE5eXFtTFAyUmpCd3BlT2ZGUVd3?oc=5",
+      "image": "https://digitalhub.fifa.com/transform/655707d7-2333-4df1-a6b7-976b55d7ee37/Match-colour-designations-confirmed-for-all-72-FIFA-World-Cup-2026-group-stage-fixtures?io=transform:fill,width:900,height:506"
     },
     {
       "name": "FIFA 官方",
-      "type": "新闻源",
-      "confidence": 96,
-      "url": "https://www.inside.fifa.com/news/fifa-president-welcomes-team-one-at-training-camp-in-miami",
-      "image": "https://digitalhub.fifa.com/transform/2cfdd8a8-fd7e-4c55-b387-5741fe4d9623/Referees-Training-Session-FIFA-World-Cup-2026"
-    },
-    {
-      "name": "FIFA 官方",
-      "type": "新闻源",
-      "confidence": 96,
-      "url": "https://www.inside.fifa.com/news/refurbished-community-football-pitch-miami",
-      "image": "https://digitalhub.fifa.com/transform/2d8cead5-a7f5-44d5-b216-18bae26341f8/KIPP-Miami-Public-Schools-Football-Pitch-Refurbishment-Ribbon-Cutting-Ceremony"
-    },
-    {
-      "name": "FIFA 官方",
-      "type": "新闻源",
-      "confidence": 96,
-      "url": "https://www.inside.fifa.com/news/gianni-infantino-italian-heritage-footballs-influence-new-york-city-event",
-      "image": "https://digitalhub.fifa.com/transform/9ef0f8cb-0e1d-4471-bc13-6a090ecc4d75/FIFA-President-Gianni-Infantino-Attends-Mass-at-St-Patrick-s-Old-Cathedral"
-    },
-    {
-      "name": "FIFA 官方",
-      "type": "新闻源",
-      "confidence": 96,
+      "type": "AI候选源",
+      "confidence": 90,
       "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQNlQ3YjJfdGxLQkNzRld3cFRsVnhOeGtKRWp0ZTgyYVRoOHRwUXF4a2J5bmttY0tWX2tKc3hwMWNObXVnQ093clJjRC1CWGJWQnNndXdpMlBHQjZMTHNvcTJiMldmSXA2WWpwWl9lQXBYbTdBSkh0R3VkNE16UDZpOHhvaDNNcXdyMjN5NXlkek1EZ296VkpMV0dBMFZjaGdmRVpYVzF5QkFPLTJ0Q2dScFdB?oc=5",
-      "image": "https://digitalhub.fifa.com/transform/eb9b5c03-9e8f-41ab-92c8-370d012b7c87/FIFA-World-Cup-stadium-capacities-confirmed"
+      "image": "https://digitalhub.fifa.com/transform/538da51b-ae27-4d6f-9fa8-93d24a0ef1f3/Tournament-Operations-Center-Tour?io=transform:fill,width:900,height:506"
     }
   ],
   "notification": {
-    "title": "PULSE 26 世界杯晨报",
-    "message": "墨西哥 vs 南非赛果更新\n\n点开查看完整卡片：https://fangzheng17.github.io/pulse-26/"
+    "title": "2026 世界杯开幕！",
+    "message": "墨西哥 2-0 南非，揭幕战三红创纪录。今日赛程请关注 PULSE 26。"
   }
 }
