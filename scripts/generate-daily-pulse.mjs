@@ -291,7 +291,7 @@ function parseFeed(xml, feed) {
     const source = itemSource || cleanSourceName(feed.source);
     const sameSource = !itemSource || source === cleanSourceName(feed.source) || /谷歌新闻|中文体育新闻/.test(feed.source);
     const feedImage = extractFeedImage(item);
-    const image = normalizeFifaImageUrl(feedImage) || (/FIFA/.test(source) ? officialFifaImage : "");
+    const image = normalizeArticleImageUrl(feedImage) || (/FIFA/.test(source) ? officialFifaImage : "");
     return {
       id: `${feed.source}-${index}-${title}`.slice(0, 120),
       source,
@@ -352,8 +352,12 @@ function normalizeFifaImageUrl(url = "", width = 900, height = 506) {
   return `${base}?io=transform:fill,width:${width},height:${height}`;
 }
 
-function sameFifaAsset(left = "", right = "") {
-  return isFifaImage(left) && isFifaImage(right) && String(left).split("?")[0] === String(right).split("?")[0];
+function normalizeArticleImageUrl(url = "") {
+  const value = String(url).trim();
+  if (!value || !/^https:\/\//i.test(value)) return "";
+  if (isFifaImage(value)) return normalizeFifaImageUrl(value);
+  if (/(\.jpg|\.jpeg|\.png|\.webp)(\?|$)/i.test(value)) return value;
+  return "";
 }
 
 function hasScoreSignal(text) {
@@ -423,13 +427,9 @@ function fallbackCards(articles) {
       image: officialFifaImage
     }
   ];
-  const officialImagePool = usable
-    .map((article) => article.image)
-    .map((image) => normalizeFifaImageUrl(image))
-    .filter((image) => image && !sameFifaAsset(image, officialFifaImage));
   return usable.slice(0, 6).map((article, index) => {
     const localized = localizeArticle(article, index);
-    const image = pickOfficialImage(article, officialImagePool, index);
+    const image = pickArticleImage(article);
     return {
       id: `feed-${index}-${slug(article.title)}`,
       kind: index === 0 ? "今日头条" : ["新闻线索", "赛前动态", "赛程雷达", "伤病观察", "今日暗线"][index - 1] ?? "新闻线索",
@@ -447,10 +447,9 @@ function fallbackCards(articles) {
   });
 }
 
-function pickOfficialImage(article, imagePool, index) {
-  const articleImage = normalizeFifaImageUrl(article.image);
-  if (articleImage && !sameFifaAsset(articleImage, officialFifaImage)) return articleImage;
-  if (imagePool.length) return imagePool[index % imagePool.length];
+function pickArticleImage(article) {
+  const articleImage = normalizeArticleImageUrl(article.image);
+  if (articleImage) return articleImage;
   return officialFifaImage;
 }
 
@@ -605,7 +604,7 @@ function buildPrompt(articles) {
     "必须只输出 JSON，不要 Markdown，不要解释。",
     "要求：中文；5-8 张卡片；不要编造未确认信息；每张卡要有判断、看点和来源；label、kind、title、summary、why、watch、source 都必须用中文。",
     "首页 topPick 必须优先选择今天最重要的比分、赛果或战报类新闻；如果没有明确比分，再选择最重要的赛程或球队动态。",
-    "图片必须优先使用候选源里的 digitalhub.fifa.com 官方图片；不要自己编造图片 URL。",
+    "图片只能使用候选新闻源里同一篇文章给出的 image；FIFA 官方文章可以使用 digitalhub.fifa.com 图片；非 FIFA 新闻不要硬配别的 FIFA 新闻图片；没有同篇图片时 image 可以留空。",
     "JSON 结构：",
     JSON.stringify({
       meta: { title: "string", subtitle: "string", status: "string", summary: "string" },
@@ -614,7 +613,7 @@ function buildPrompt(articles) {
         match: "string",
         time: "HH:mm",
         body: "string",
-        image: "https://digitalhub.fifa.com/...",
+        image: "string",
         metrics: [{ label: "string", value: "string", accent: true }]
       },
       pulseCards: [{
@@ -627,7 +626,7 @@ function buildPrompt(articles) {
         confidence: 90,
         source: "string",
         url: "string",
-        image: "https://digitalhub.fifa.com/...",
+        image: "string",
         imageAlt: "string",
         tone: "amber|green|steel|blue"
       }],
@@ -708,7 +707,7 @@ function buildPulsePayload(cards, articles, sourceMode, aiPayload = {}) {
     type: aiMode ? "AI候选源" : "新闻源",
     confidence: article.confidence ?? 82,
     url: article.url,
-    image: normalizeFifaImageUrl(article.image) || officialFifaImage
+    image: normalizeArticleImageUrl(article.image) || officialFifaImage
   }));
 
   return {
@@ -727,7 +726,7 @@ function buildPulsePayload(cards, articles, sourceMode, aiPayload = {}) {
       match: topStory?.title ?? "今日最重要的比分新闻",
       time: kind === "night" ? "21:30" : "08:20",
       body: topStory?.summary || "今日世界杯比分、赛果和战报候选新闻已经更新，点开卡片查看来源和重点。",
-      image: normalizeFifaImageUrl(topStory?.image) || officialFifaImage,
+      image: normalizeArticleImageUrl(topStory?.image) || officialFifaImage,
       metrics: [
         { label: "更新模式", value: aiMode ? "智能生成" : "新闻源", accent: true },
         { label: "候选新闻", value: String(articles.length) },
@@ -754,34 +753,24 @@ function providerDisplayName(provider) {
   return names[provider] ?? provider;
 }
 
-function buildImagePool(articles) {
-  const seen = new Set();
-  return articles
-    .map((article) => normalizeFifaImageUrl(article.image))
-    .filter((image) => image && !sameFifaAsset(image, officialFifaImage))
-    .filter((image) => {
-      const key = image.split("?")[0];
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
-}
-
 function findArticleForCard(card, articles, index) {
   const byUrl = articles.find((article) => article.url && card.url && article.url === card.url);
   if (byUrl) return byUrl;
   return articles[index];
 }
 
-function selectAiCardImage(card, articles, imagePool, index) {
-  const cardImage = normalizeFifaImageUrl(card.image);
-  if (cardImage && !sameFifaAsset(cardImage, officialFifaImage)) return cardImage;
+function isFifaCard(card) {
+  return /FIFA/i.test(String(card.source ?? "")) || /^https:\/\/(www\.)?(inside\.)?fifa\.com\//i.test(String(card.url ?? ""));
+}
 
+function selectAiCardImage(card, articles, index) {
   const matchedArticle = findArticleForCard(card, articles, index);
-  const articleImage = normalizeFifaImageUrl(matchedArticle?.image);
-  if (articleImage && !sameFifaAsset(articleImage, officialFifaImage)) return articleImage;
+  const articleImage = normalizeArticleImageUrl(matchedArticle?.image);
+  if (articleImage) return articleImage;
 
-  if (imagePool.length) return imagePool[index % imagePool.length];
+  const cardImage = normalizeArticleImageUrl(card.image);
+  if (cardImage && (isFifaCard(card) || !isFifaImage(cardImage))) return cardImage;
+
   return officialFifaImage;
 }
 
@@ -789,30 +778,31 @@ function normalizeAiPayload(aiPayload, articles) {
   const cards = Array.isArray(aiPayload.pulseCards) && aiPayload.pulseCards.length
     ? aiPayload.pulseCards
     : fallbackCards(articles);
-  const imagePool = buildImagePool(articles);
-  const firstImage = imagePool[0] || officialFifaImage;
+  const firstDirectImage = normalizeArticleImageUrl(findArticleForCard(cards[0] ?? {}, articles, 0)?.image);
+  const firstImage = firstDirectImage || officialFifaImage;
+  const normalizedCards = cards.slice(0, 8).map((card, index) => ({
+    id: card.id || `ai-${index}-${slug(card.title ?? "card")}`,
+    kind: card.kind || "今日线索",
+    title: String(card.title || "世界杯更新").slice(0, 42),
+    summary: String(card.summary || "").slice(0, 68),
+    why: String(card.why || card.summary || "这条信息进入今日世界杯候选源。"),
+    watch: String(card.watch || "关注官方确认、首发、伤病和赛程影响。"),
+    confidence: clamp(Number(card.confidence) || 86, 50, 99),
+    source: card.source || "公开新闻源",
+    url: card.url || articles[index]?.url || pulseUrl,
+    image: selectAiCardImage(card, articles, index),
+    imageAlt: card.imageAlt || articles[index]?.imageAlt || card.title || "FIFA World Cup 2026",
+    tone: ["amber", "green", "steel", "blue"].includes(card.tone) ? card.tone : ["amber", "green", "steel", "blue"][index % 4]
+  }));
   return {
     ...aiPayload,
     topPick: aiPayload.topPick
       ? {
           ...aiPayload.topPick,
-          image: normalizeFifaImageUrl(aiPayload.topPick.image) || firstImage
+          image: normalizedCards[0]?.image || firstImage
         }
       : aiPayload.topPick,
-    pulseCards: cards.slice(0, 8).map((card, index) => ({
-      id: card.id || `ai-${index}-${slug(card.title ?? "card")}`,
-      kind: card.kind || "今日线索",
-      title: String(card.title || "世界杯更新").slice(0, 42),
-      summary: String(card.summary || "").slice(0, 68),
-      why: String(card.why || card.summary || "这条信息进入今日世界杯候选源。"),
-      watch: String(card.watch || "关注官方确认、首发、伤病和赛程影响。"),
-      confidence: clamp(Number(card.confidence) || 86, 50, 99),
-      source: card.source || "公开新闻源",
-      url: card.url || articles[index]?.url || pulseUrl,
-      image: selectAiCardImage(card, articles, imagePool, index),
-      imageAlt: card.imageAlt || articles[index]?.imageAlt || card.title || "FIFA World Cup 2026",
-      tone: ["amber", "green", "steel", "blue"].includes(card.tone) ? card.tone : ["amber", "green", "steel", "blue"][index % 4]
-    }))
+    pulseCards: normalizedCards
   };
 }
 
